@@ -3,6 +3,7 @@ import cookieParser from 'cookie-parser';
 import express from 'express';
 import { healthResponseSchema } from '@prospectinbound/shared';
 import { authRouter } from './modules/auth/auth.routes.js';
+import { dashboardRouter } from './modules/dashboard/dashboard.routes.js';
 import { errorHandler } from './shared/error-handler.js';
 
 export const app = express();
@@ -17,4 +18,5 @@ app.get('/health', (_request, response) => {
 });
 
 app.use('/api/auth', authRouter);
+app.use('/api/dashboard', dashboardRouter);
 app.use(errorHandler);

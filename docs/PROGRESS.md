@@ -2,21 +2,23 @@
 
 ## Módulo atual
 
-Módulo 2 — Layout e dashboard base (a iniciar)
+Módulo 3 — Parceiros, produtos e pipelines (a iniciar)
 
 ## Módulos concluídos
 
 - Módulo 0 — Inicialização.
 - Módulo 1 — Banco e autenticação.
+- Módulo 2 — Layout e dashboard base.
 
 ## Último commit
 
-`feat: add database schema and local authentication`.
+`feat: add application layout and dashboard foundation`.
 
 ## Testes executados
 
 - Módulo 0: `npm run lint`, `npm run typecheck`, `npm run test` e `npm run build`.
 - Módulo 1: `npm run lint`, `npm run typecheck`, `npm run test` (3 testes aprovados) e `npm run build`.
+- Módulo 2: `npm run lint`, `npm run typecheck`, `npm run test` (3 testes aprovados) e `npm run build`.
 
 ## Pendências conhecidas
 
@@ -24,7 +26,7 @@ Os scripts de seed e backup ainda são marcadores até os módulos responsáveis
 
 ## Próximo módulo
 
-Módulo 2 — Layout, navegação e dashboard base.
+Módulo 3 — Parceiros, produtos e pipelines.
 
 ## Decisões técnicas relevantes
 
@@ -32,3 +34,4 @@ Módulo 2 — Layout, navegação e dashboard base.
 - API Express e frontend React/Vite em TypeScript.
 - O build de produção serve o frontend pela API Express.
 - O Prisma usa SQLite e migrations versionadas; o primeiro administrador é criado pela interface.
+- O dashboard-base usa indicadores vazios protegidos pela API até os módulos comerciais fornecerem dados reais.
