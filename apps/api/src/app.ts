@@ -14,6 +14,7 @@ import { usersRouter } from './modules/users/users.routes.js';
 import { exportsRouter } from './modules/exports/exports.routes.js';
 import { backupRouter } from './modules/backup/backup.routes.js';
 import { importsRouter } from './modules/imports/imports.routes.js';
+import { commissionsRouter } from './modules/commissions/commissions.routes.js';
 import { errorHandler } from './shared/error-handler.js';
 
 export const app = express();
@@ -39,4 +40,5 @@ app.use('/api/users', usersRouter);
 app.use('/api/exports', exportsRouter);
 app.use('/api/backups', backupRouter);
 app.use('/api/imports', importsRouter);
+app.use('/api/commissions', commissionsRouter);
 app.use(errorHandler);

@@ -14,4 +14,12 @@ describe('MVP commercial calculation flow', () => {
       totalCents: 9449
     });
   });
+
+  it('calculates a recurring-only payment without charging activation again', () => {
+    expect(calculateInitialCommission(0, 1250, 9999)).toEqual({
+      fixedCents: 0,
+      recurringCents: 1250,
+      totalCents: 1250
+    });
+  });
 });

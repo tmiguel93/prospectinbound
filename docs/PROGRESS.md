@@ -2,7 +2,7 @@
 
 ## Módulo atual
 
-Correções pós-MVP — telas pendentes, auditoria abrangente, importação/restauração e cobertura de testes.
+Módulo 14 — Importação CSV: arquivo, prévia, mapeamento e erros (em andamento).
 
 ## Módulos concluídos
 
@@ -19,30 +19,27 @@ Correções pós-MVP — telas pendentes, auditoria abrangente, importação/res
 - Módulo 10 — Exportação CSV e backups locais.
 - Módulo 11 — Validação automatizada do MVP.
 - Módulo 12 — Documentação final e revisão global.
+- Módulo 13 — Operação de comissões: painel, pagamento e estorno.
 
 ## Último commit
 
-`feat: add persistent light and dark theme`.
+`feat: complete commission operations dashboard`.
 
 ## Testes executados
 
 - `npm run format:check`
 - `npm run lint`
 - `npm run typecheck`
-- `npm run test` — 5 testes aprovados.
+- `npm run test` — 6 testes aprovados.
 - `npm run build`
 
 ## Pendências conhecidas
 
-- Telas completas para Agenda, Vendas, Assinaturas, Comissões, Usuários, Auditoria, Relatórios e Configurações.
-- Importação CSV e restauração segura de backups.
-- Auditoria para todas as mutações comerciais.
-- Regras configuráveis de score por resposta, estornos, prazo de segurança e dashboards de comissão.
-- Cobertura de testes de integração e testes de interface.
+As lacunas pós-MVP foram convertidas em módulos sequenciais e serão tratadas sem misturar escopos.
 
 ## Próximo módulo
 
-Correções pós-MVP — priorizar agenda e vendas com interfaces completas.
+Módulo 14 — Importação CSV: arquivo, prévia, mapeamento e relatório de erros.
 
 ## Decisões técnicas relevantes
 
