@@ -2,7 +2,7 @@
 
 ## Módulo atual
 
-Módulo 20 — Pipelines e assinaturas: telas operacionais (em andamento).
+Módulo 21 — Relatórios e testes ampliados (em andamento).
 
 ## Módulos concluídos
 
@@ -26,10 +26,11 @@ Módulo 20 — Pipelines e assinaturas: telas operacionais (em andamento).
 - Módulo 17 — Auditoria: filtros, paginação e cobertura de eventos comerciais.
 - Módulo 18 — Agenda: responsável e reagendamento com validação de conflito.
 - Módulo 19 — Vendas: alteração de plano e cancelamento de assinatura.
+- Módulo 20 — Pipelines e assinaturas: telas operacionais conectadas aos dados locais.
 
 ## Último commit
 
-`feat: add sales plan changes and cancellation`.
+`feat: add pipelines and subscriptions pages`.
 
 ## Testes executados
 
@@ -45,7 +46,7 @@ As lacunas pós-MVP foram convertidas em módulos sequenciais e serão tratadas 
 
 ## Próximo módulo
 
-Módulo 20 — Pipelines e assinaturas: telas operacionais.
+Módulo 21 — Relatórios e testes ampliados.
 
 ## Decisões técnicas relevantes
 
