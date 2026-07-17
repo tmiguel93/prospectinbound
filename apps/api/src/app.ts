@@ -9,6 +9,8 @@ import { leadsRouter } from './modules/leads/leads.routes.js';
 import { qualificationRouter } from './modules/qualification/qualification.routes.js';
 import { meetingsRouter } from './modules/meetings/meetings.routes.js';
 import { salesRouter } from './modules/sales/sales.routes.js';
+import { auditRouter } from './modules/audit/audit.routes.js';
+import { usersRouter } from './modules/users/users.routes.js';
 import { errorHandler } from './shared/error-handler.js';
 
 export const app = express();
@@ -29,4 +31,6 @@ app.use('/api/leads', leadsRouter);
 app.use('/api/qualifications', qualificationRouter);
 app.use('/api/meetings', meetingsRouter);
 app.use('/api/sales', salesRouter);
+app.use('/api/audit', auditRouter);
+app.use('/api/users', usersRouter);
 app.use(errorHandler);

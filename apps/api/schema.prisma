@@ -30,6 +30,20 @@ model User {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   leads        Lead[]
+  auditLogs    AuditLog[]
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  action    String
+  entity    String
+  entityId  String?
+  before    String?
+  after     String?
+  ipAddress String?
+  createdAt DateTime @default(now())
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
 }
 
 model Partner {
