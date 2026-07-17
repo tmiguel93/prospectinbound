@@ -6,13 +6,13 @@ import { AuthScreen } from './components/AuthScreen.js';
 import { DashboardPage } from './features/dashboard/DashboardPage.js';
 import { ProductCatalogPage } from './features/catalog/ProductCatalogPage.js';
 import { LeadsPage } from './features/leads/LeadsPage.js';
+import { AgendaPage } from './features/agenda/AgendaPage.js';
 import { apiRequest, type User } from './lib/api.js';
 import { ComingSoonPage } from './pages/ComingSoonPage.js';
 import './styles.css';
 
 const placeholders = [
   'Pipelines',
-  'Agenda',
   'Vendas',
   'Assinaturas',
   'Comissões',
@@ -29,6 +29,7 @@ function AuthenticatedApp({ user, onLogout }: { user: User; onLogout: () => void
           <Route path="/" element={<DashboardPage />} />
           <Route path="/parceiros-e-produtos" element={<ProductCatalogPage />} />
           <Route path="/leads" element={<LeadsPage />} />
+          <Route path="/agenda" element={<AgendaPage />} />
           {placeholders.map((title) => (
             <Route
               key={title}
