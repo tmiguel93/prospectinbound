@@ -5,6 +5,7 @@ import { AppShell } from './components/AppShell.js';
 import { AuthScreen } from './components/AuthScreen.js';
 import { DashboardPage } from './features/dashboard/DashboardPage.js';
 import { ProductCatalogPage } from './features/catalog/ProductCatalogPage.js';
+import { LeadsPage } from './features/leads/LeadsPage.js';
 import { apiRequest, type User } from './lib/api.js';
 import { ComingSoonPage } from './pages/ComingSoonPage.js';
 import './styles.css';
@@ -12,7 +13,6 @@ import './styles.css';
 const placeholders = [
   'Pipelines',
   'Agenda',
-  'Leads',
   'Vendas',
   'Assinaturas',
   'Comissões',
@@ -28,6 +28,7 @@ function AuthenticatedApp({ user, onLogout }: { user: User; onLogout: () => void
         <Routes>
           <Route path="/" element={<DashboardPage />} />
           <Route path="/parceiros-e-produtos" element={<ProductCatalogPage />} />
+          <Route path="/leads" element={<LeadsPage />} />
           {placeholders.map((title) => (
             <Route
               key={title}

@@ -29,6 +29,7 @@ model User {
   active       Boolean  @default(true)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+  leads        Lead[]
 }
 
 model Partner {
@@ -57,6 +58,7 @@ model Product {
   plans             Plan[]
   commissionRule    CommissionRule?
   questions         ProductQuestion[]
+  leads             Lead[]
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
 
@@ -98,6 +100,7 @@ model Pipeline {
   archived  Boolean         @default(false)
   stages    PipelineStage[]
   products  Product[]
+  leads     Lead[]
   createdAt DateTime        @default(now())
   updatedAt DateTime        @updatedAt
 }
@@ -111,8 +114,59 @@ model PipelineStage {
   isInitial  Boolean  @default(false)
   isFinal    Boolean  @default(false)
   pipeline   Pipeline @relation(fields: [pipelineId], references: [id], onDelete: Cascade)
+  leads      Lead[]
 
   @@unique([pipelineId, position])
+}
+
+model Lead {
+  id                String              @id @default(cuid())
+  establishmentName String
+  contactName       String?
+  phone             String?
+  whatsapp          String?
+  email             String?
+  city              String?
+  state             String?
+  productId         String
+  pipelineId        String
+  stageId           String
+  source            String              @default("Prospecção própria")
+  ownerId           String?
+  score             Int                 @default(0)
+  priority          String              @default("Normal")
+  nextAction        String?
+  nextActionAt      DateTime?
+  lastContactAt     DateTime?
+  notes             String?
+  status            String              @default("ACTIVE")
+  product           Product             @relation(fields: [productId], references: [id])
+  pipeline          Pipeline            @relation(fields: [pipelineId], references: [id])
+  stage             PipelineStage       @relation(fields: [stageId], references: [id])
+  owner             User?               @relation(fields: [ownerId], references: [id])
+  activities        LeadActivity[]
+  stageHistory      LeadStageHistory[]
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+}
+
+model LeadActivity {
+  id        String   @id @default(cuid())
+  leadId    String
+  type      String
+  content   String?
+  createdAt DateTime @default(now())
+  lead      Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+}
+
+model LeadStageHistory {
+  id          String   @id @default(cuid())
+  leadId      String
+  userId      String?
+  previousId  String?
+  nextId      String
+  createdAt   DateTime @default(now())
+  lead        Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
 }
 
 model ProductQuestion {

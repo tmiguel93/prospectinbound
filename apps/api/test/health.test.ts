@@ -79,6 +79,7 @@ describe('catalog wizard', () => {
   });
 
   it('creates a configurable product, its plans, rule and five-stage pipeline', async () => {
+    const stamp = Date.now();
     const agent = request.agent(app);
     await agent.post('/api/auth/setup').send({
       name: 'Admin',
@@ -86,8 +87,8 @@ describe('catalog wizard', () => {
       password: 'senha-segura-123'
     });
     const created = await agent.post('/api/catalog/wizard').send({
-      partnerName: 'Parceiro de teste',
-      product: { name: 'Produto de teste', segment: 'Testes', active: true },
+      partnerName: `Parceiro de teste ${stamp}`,
+      product: { name: `Produto de teste ${stamp}`, segment: 'Testes', active: true },
       plans: [{ name: 'Mensal', priceCents: 12990, period: 'MONTHLY', active: true }],
       commission: {
         fixedActivationCents: 3000,
@@ -98,7 +99,7 @@ describe('catalog wizard', () => {
         safetyDays: 0
       },
       pipeline: {
-        name: 'Pipeline de teste',
+        name: `Pipeline de teste ${stamp}`,
         stages: ['Novo', 'Contato', 'Qualificado', 'Reunião', 'Fechamento'].map((name, index) => ({
           name,
           color: '#0891b2',
@@ -114,7 +115,7 @@ describe('catalog wizard', () => {
     expect(created.body.product.commissionRule.fixedActivationCents).toBe(3000);
     expect(created.body.product.pipeline.stages).toHaveLength(5);
     expect((await agent.get('/api/catalog/overview')).body.products).toEqual(
-      expect.arrayContaining([expect.objectContaining({ name: 'Produto de teste' })])
+      expect.arrayContaining([expect.objectContaining({ name: `Produto de teste ${stamp}` })])
     );
   });
 });

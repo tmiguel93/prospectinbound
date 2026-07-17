@@ -5,6 +5,7 @@ import { healthResponseSchema } from '@prospectinbound/shared';
 import { authRouter } from './modules/auth/auth.routes.js';
 import { catalogRouter } from './modules/catalog/catalog.routes.js';
 import { dashboardRouter } from './modules/dashboard/dashboard.routes.js';
+import { leadsRouter } from './modules/leads/leads.routes.js';
 import { errorHandler } from './shared/error-handler.js';
 
 export const app = express();
@@ -21,4 +22,5 @@ app.get('/health', (_request, response) => {
 app.use('/api/auth', authRouter);
 app.use('/api/catalog', catalogRouter);
 app.use('/api/dashboard', dashboardRouter);
+app.use('/api/leads', leadsRouter);
 app.use(errorHandler);
