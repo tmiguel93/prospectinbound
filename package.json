@@ -1,0 +1,39 @@
+{
+  "name": "prospectinbound",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently -n api,web -c cyan,magenta \"npm run dev -w @prospectinbound/api\" \"npm run dev -w @prospectinbound/web\"",
+    "build": "npm run build -w @prospectinbound/shared && npm run build -w @prospectinbound/web && npm run build -w @prospectinbound/api",
+    "start": "npm run start -w @prospectinbound/api",
+    "lint": "eslint .",
+    "format": "prettier . --write",
+    "format:check": "prettier . --check",
+    "typecheck": "npm run typecheck -w @prospectinbound/shared && npm run typecheck -w @prospectinbound/api && npm run typecheck -w @prospectinbound/web",
+    "test": "npm run build -w @prospectinbound/shared && vitest run",
+    "test:api": "npm run test -w @prospectinbound/api",
+    "test:web": "npm run test -w @prospectinbound/web",
+    "db:migrate": "echo Banco de dados será configurado no Módulo 1.",
+    "db:seed": "echo Seed será configurado no Módulo 3.",
+    "db:studio": "echo Prisma Studio será configurado no Módulo 1.",
+    "backup": "echo Backup será configurado no Módulo 10.",
+    "setup": "powershell -ExecutionPolicy Bypass -File ./setup-local.ps1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.25.1",
+    "@types/node": "^22.15.3",
+    "concurrently": "^9.1.2",
+    "eslint": "^9.25.1",
+    "eslint-config-prettier": "^10.1.2",
+    "globals": "^16.0.0",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.30.1",
+    "vitest": "^3.1.2"
+  }
+}

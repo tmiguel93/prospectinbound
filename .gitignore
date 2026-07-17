@@ -1,0 +1,10 @@
+node_modules/
+dist/
+coverage/
+.env
+*.log
+data/*.db
+data/*.db-*
+backups/*
+!backups/.gitkeep
+
