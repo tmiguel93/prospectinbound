@@ -12,6 +12,14 @@ enum UserRole {
   SELLER
 }
 
+enum BillingPeriod {
+  MONTHLY
+  QUARTERLY
+  SEMIANNUAL
+  ANNUAL
+  ONE_TIME
+}
+
 model User {
   id           String   @id @default(cuid())
   name         String
@@ -21,4 +29,101 @@ model User {
   active       Boolean  @default(true)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+}
+
+model Partner {
+  id        String    @id @default(cuid())
+  name      String    @unique
+  notes     String?
+  active    Boolean   @default(true)
+  products  Product[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Product {
+  id                String             @id @default(cuid())
+  partnerId         String
+  pipelineId        String?
+  name              String
+  description       String?
+  segment           String
+  active            Boolean            @default(true)
+  demoUrl           String?
+  signupUrl         String?
+  internalNotes     String?
+  partner           Partner            @relation(fields: [partnerId], references: [id])
+  pipeline          Pipeline?          @relation(fields: [pipelineId], references: [id])
+  plans             Plan[]
+  commissionRule    CommissionRule?
+  questions         ProductQuestion[]
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+
+  @@unique([partnerId, name])
+}
+
+model Plan {
+  id          String        @id @default(cuid())
+  productId   String
+  name        String
+  priceCents  Int
+  period      BillingPeriod @default(MONTHLY)
+  description String?
+  active      Boolean       @default(true)
+  product     Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model CommissionRule {
+  id                     String   @id @default(cuid())
+  productId              String   @unique
+  fixedActivationCents   Int      @default(0)
+  recurringPercentageBps Int      @default(0)
+  maxMonths              Int?
+  unlimitedRecurrence    Boolean  @default(true)
+  includeFirstPayment    Boolean  @default(true)
+  safetyDays             Int      @default(0)
+  refundPolicy           String?
+  active                 Boolean  @default(true)
+  product                Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+}
+
+model Pipeline {
+  id        String          @id @default(cuid())
+  name      String          @unique
+  archived  Boolean         @default(false)
+  stages    PipelineStage[]
+  products  Product[]
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+}
+
+model PipelineStage {
+  id         String   @id @default(cuid())
+  pipelineId String
+  name       String
+  color      String   @default("#0891b2")
+  position   Int
+  isInitial  Boolean  @default(false)
+  isFinal    Boolean  @default(false)
+  pipeline   Pipeline @relation(fields: [pipelineId], references: [id], onDelete: Cascade)
+
+  @@unique([pipelineId, position])
+}
+
+model ProductQuestion {
+  id          String   @id @default(cuid())
+  productId   String
+  label       String
+  inputType   String   @default("TEXT")
+  optionsJson String?
+  scoresJson  String?
+  position    Int
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, position])
 }

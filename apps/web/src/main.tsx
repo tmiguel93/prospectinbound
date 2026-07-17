@@ -4,6 +4,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { AppShell } from './components/AppShell.js';
 import { AuthScreen } from './components/AuthScreen.js';
 import { DashboardPage } from './features/dashboard/DashboardPage.js';
+import { ProductCatalogPage } from './features/catalog/ProductCatalogPage.js';
 import { apiRequest, type User } from './lib/api.js';
 import { ComingSoonPage } from './pages/ComingSoonPage.js';
 import './styles.css';
@@ -15,7 +16,6 @@ const placeholders = [
   'Vendas',
   'Assinaturas',
   'Comissões',
-  'Parceiros e Produtos',
   'Usuários',
   'Relatórios',
   'Configurações'
@@ -27,6 +27,7 @@ function AuthenticatedApp({ user, onLogout }: { user: User; onLogout: () => void
       <AppShell user={user} onLogout={onLogout}>
         <Routes>
           <Route path="/" element={<DashboardPage />} />
+          <Route path="/parceiros-e-produtos" element={<ProductCatalogPage />} />
           {placeholders.map((title) => (
             <Route
               key={title}

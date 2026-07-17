@@ -19,7 +19,7 @@
     "test:api": "npm run test -w @prospectinbound/api",
     "test:web": "npm run test -w @prospectinbound/web",
     "db:migrate": "npm run prisma:migrate -w @prospectinbound/api",
-    "db:seed": "echo Seed será configurado no Módulo 3.",
+    "db:seed": "npm run prisma:seed -w @prospectinbound/api",
     "db:studio": "npm run prisma:studio -w @prospectinbound/api",
     "backup": "echo Backup será configurado no Módulo 10.",
     "setup": "powershell -ExecutionPolicy Bypass -File ./setup-local.ps1"

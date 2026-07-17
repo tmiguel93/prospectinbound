@@ -19,3 +19,12 @@ export async function requireAuth(request: Request, response: Response, next: Ne
   response.locals.user = toPublicUser(user);
   next();
 }
+
+export function requireAdmin(_request: Request, response: Response, next: NextFunction) {
+  if (response.locals.user?.role !== 'ADMIN') {
+    response.status(403).json({ message: 'Acesso restrito a administradores.' });
+    return;
+  }
+
+  next();
+}

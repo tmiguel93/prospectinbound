@@ -68,3 +68,53 @@ describe('local authentication', () => {
     expect((await agent.get('/api/auth/me')).status).toBe(200);
   });
 });
+
+describe('catalog wizard', () => {
+  beforeEach(async () => {
+    await prisma.user.deleteMany();
+  });
+
+  afterAll(async () => {
+    await prisma.$disconnect();
+  });
+
+  it('creates a configurable product, its plans, rule and five-stage pipeline', async () => {
+    const agent = request.agent(app);
+    await agent.post('/api/auth/setup').send({
+      name: 'Admin',
+      email: 'admin@example.com',
+      password: 'senha-segura-123'
+    });
+    const created = await agent.post('/api/catalog/wizard').send({
+      partnerName: 'Parceiro de teste',
+      product: { name: 'Produto de teste', segment: 'Testes', active: true },
+      plans: [{ name: 'Mensal', priceCents: 12990, period: 'MONTHLY', active: true }],
+      commission: {
+        fixedActivationCents: 3000,
+        recurringPercentageBps: 1000,
+        maxMonths: null,
+        unlimitedRecurrence: true,
+        includeFirstPayment: true,
+        safetyDays: 0
+      },
+      pipeline: {
+        name: 'Pipeline de teste',
+        stages: ['Novo', 'Contato', 'Qualificado', 'Reunião', 'Fechamento'].map((name, index) => ({
+          name,
+          color: '#0891b2',
+          isInitial: index === 0,
+          isFinal: index === 4
+        }))
+      },
+      questions: [{ label: 'Pergunta inicial?', inputType: 'TEXT' }]
+    });
+
+    expect(created.status).toBe(201);
+    expect(created.body.product.plans[0].priceCents).toBe(12990);
+    expect(created.body.product.commissionRule.fixedActivationCents).toBe(3000);
+    expect(created.body.product.pipeline.stages).toHaveLength(5);
+    expect((await agent.get('/api/catalog/overview')).body.products).toEqual(
+      expect.arrayContaining([expect.objectContaining({ name: 'Produto de teste' })])
+    );
+  });
+});

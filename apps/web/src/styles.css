@@ -89,6 +89,90 @@ body {
   background: #fff;
   padding: 1.25rem;
 }
+.primary-button,
+.secondary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.5rem;
+  padding: 0.65rem 0.9rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+.primary-button {
+  background: #0891b2;
+  color: white;
+}
+.primary-button:hover {
+  background: #0e7490;
+}
+.secondary-button {
+  border: 1px solid #cbd5e1;
+  background: white;
+  color: #334155;
+}
+.secondary-button:hover {
+  background: #f8fafc;
+}
+.badge {
+  display: inline-flex;
+  border-radius: 999px;
+  background: #f1f5f9;
+  padding: 0.2rem 0.55rem;
+  font-size: 0.75rem;
+  color: #475569;
+}
+.badge-active {
+  background: #dcfce7;
+  color: #166534;
+}
+.stage-chip {
+  border: 1px solid;
+  border-radius: 999px;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.7rem;
+  color: #475569;
+}
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: grid;
+  place-items: center;
+  overflow-y: auto;
+  background: rgb(15 23 42 / 0.55);
+  padding: 1rem;
+}
+.modal-panel {
+  width: min(100%, 52rem);
+  border-radius: 1rem;
+  background: white;
+  padding: 1.5rem;
+  box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.35);
+}
+.wizard-grid {
+  display: grid;
+  gap: 1rem;
+}
+.wizard-step {
+  white-space: nowrap;
+  border-radius: 999px;
+  background: #f1f5f9;
+  padding: 0.35rem 0.6rem;
+  font-size: 0.75rem;
+  color: #64748b;
+}
+.wizard-step-active {
+  background: #cffafe;
+  color: #155e75;
+  font-weight: 700;
+}
+@media (min-width: 768px) {
+  .wizard-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
 @media (min-width: 1024px) {
   .sidebar {
     transform: translateX(0);
