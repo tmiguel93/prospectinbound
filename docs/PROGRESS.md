@@ -2,7 +2,7 @@
 
 ## Módulo atual
 
-Módulo 18 — Agenda: visões, reagendamento e responsável (em andamento).
+Módulo 19 — Vendas: criação, alteração e cancelamento (em andamento).
 
 ## Módulos concluídos
 
@@ -24,10 +24,11 @@ Módulo 18 — Agenda: visões, reagendamento e responsável (em andamento).
 - Módulo 15 — Backups: listagem, criação e restauração protegida.
 - Módulo 16 — Usuários: criação, papéis e ativação/desativação protegida.
 - Módulo 17 — Auditoria: filtros, paginação e cobertura de eventos comerciais.
+- Módulo 18 — Agenda: responsável e reagendamento com validação de conflito.
 
 ## Último commit
 
-`feat: expand audit coverage and filters`.
+`feat: add meeting ownership and rescheduling`.
 
 ## Testes executados
 
@@ -43,7 +44,7 @@ As lacunas pós-MVP foram convertidas em módulos sequenciais e serão tratadas 
 
 ## Próximo módulo
 
-Módulo 18 — Agenda: visões, reagendamento e responsável.
+Módulo 19 — Vendas: criação, alteração e cancelamento.
 
 ## Decisões técnicas relevantes
 

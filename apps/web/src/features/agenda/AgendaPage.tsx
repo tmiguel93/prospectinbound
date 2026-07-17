@@ -10,17 +10,23 @@ type Meeting = {
   format: string;
   status: string;
   lead: { establishmentName: string; product: { name: string } };
+  owner: { id: string; name: string } | null;
 };
 type Lead = { id: string; establishmentName: string };
+type User = { id: string; name: string };
 
 export function AgendaPage() {
   const [meetings, setMeetings] = useState<Meeting[]>([]);
   const [leads, setLeads] = useState<Lead[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<string>();
   const load = () => {
     apiRequest<{ meetings: Meeting[] }>('/api/meetings').then((data) => setMeetings(data.meetings));
     apiRequest<{ leads: Lead[] }>('/api/leads').then((data) => setLeads(data.leads));
+    apiRequest<{ users: User[] }>('/api/users')
+      .then((data) => setUsers(data.users))
+      .catch(() => setUsers([]));
   };
   useEffect(load, []);
   const create = async (form: HTMLFormElement) => {
@@ -33,7 +39,8 @@ export function AgendaPage() {
           title: data.get('title'),
           startsAt: new Date(String(data.get('startsAt'))).toISOString(),
           endsAt: new Date(String(data.get('endsAt'))).toISOString(),
-          format: data.get('format')
+          format: data.get('format'),
+          ownerId: data.get('ownerId') || undefined
         })
       });
       setOpen(false);
@@ -93,6 +100,14 @@ export function AgendaPage() {
               <option>Ligação</option>
               <option>Presencial</option>
               <option>Demonstração remota</option>
+            </select>
+            <select className="field" name="ownerId">
+              <option value="">Responsável atual</option>
+              {users.map((user) => (
+                <option key={user.id} value={user.id}>
+                  {user.name}
+                </option>
+              ))}
             </select>
             <div className="flex justify-end gap-2">
               <button type="button" className="secondary-button" onClick={() => setOpen(false)}>
