@@ -1,4 +1,4 @@
-import { LayoutDashboard, LogOut, Menu, Settings, UsersRound } from 'lucide-react';
+import { LayoutDashboard, LogOut, Menu, Moon, Settings, Sun, UsersRound } from 'lucide-react';
 import { useState, type ReactNode } from 'react';
 import { NavLink } from 'react-router-dom';
 import type { User } from '../lib/api.js';
@@ -27,6 +27,16 @@ export function AppShell({
   children: ReactNode;
 }) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [theme, setTheme] = useState<'light' | 'dark'>(() =>
+    localStorage.getItem('prospectinbound-theme') === 'dark' ? 'dark' : 'light'
+  );
+  const toggleTheme = () => {
+    const next = theme === 'light' ? 'dark' : 'light';
+    setTheme(next);
+    localStorage.setItem('prospectinbound-theme', next);
+    document.documentElement.dataset.theme = next;
+  };
+  document.documentElement.dataset.theme = theme;
   return (
     <div className="min-h-screen bg-slate-100 text-slate-900">
       <aside className={`sidebar ${mobileOpen ? 'sidebar-open' : ''}`}>
@@ -50,7 +60,7 @@ export function AppShell({
         </nav>
       </aside>
       <div className="lg:pl-64">
-        <header className="flex min-h-16 items-center justify-between border-b border-slate-200 bg-white px-4 sm:px-8">
+        <header className="app-header flex min-h-16 items-center justify-between border-b border-slate-200 bg-white px-4 sm:px-8">
           <button
             className="rounded-lg p-2 hover:bg-slate-100 lg:hidden"
             onClick={() => setMobileOpen(!mobileOpen)}
@@ -63,6 +73,14 @@ export function AppShell({
             <p className="text-sm text-slate-500">Visão geral da operação</p>
           </div>
           <div className="flex items-center gap-3">
+            <button
+              className="theme-toggle"
+              onClick={toggleTheme}
+              type="button"
+              aria-label="Alternar tema"
+            >
+              {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
+            </button>
             <div className="text-right text-sm">
               <p className="font-semibold">{user.name}</p>
               <p className="text-slate-500">

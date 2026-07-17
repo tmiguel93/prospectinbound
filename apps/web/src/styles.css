@@ -8,6 +8,46 @@ body {
   margin: 0;
 }
 
+:root[data-theme='dark'] {
+  color-scheme: dark;
+}
+:root[data-theme='dark'] body,
+:root[data-theme='dark'] .min-h-screen {
+  background: #020617;
+  color: #e2e8f0;
+}
+:root[data-theme='dark'] .app-header,
+:root[data-theme='dark'] .stat-card,
+:root[data-theme='dark'] .modal-panel,
+:root[data-theme='dark'] .secondary-button {
+  background: #0f172a;
+  color: #e2e8f0;
+  border-color: #334155;
+}
+:root[data-theme='dark'] .kanban-column {
+  background: #1e293b;
+}
+:root[data-theme='dark'] .lead-card,
+:root[data-theme='dark'] .field {
+  background: #020617;
+  color: #e2e8f0;
+  border-color: #475569;
+}
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  color: #64748b;
+}
+.theme-toggle:hover {
+  background: #e2e8f0;
+}
+:root[data-theme='dark'] .theme-toggle:hover {
+  background: #334155;
+}
+
 .screen {
   min-height: 100vh;
   display: grid;

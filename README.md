@@ -32,3 +32,5 @@ Durante o desenvolvimento, use `npm run dev`. A rota de verificação da API é 
 Consulte `docs/PROGRESS.md` para acompanhar o módulo em implementação.
 
 Consulte também `docs/REVIEW.md` para as verificações e melhorias futuras.
+
+Use o botão de lua/sol no cabeçalho após entrar no CRM para alternar o tema claro e escuro. A preferência é salva neste navegador.
