@@ -59,6 +59,7 @@ model Product {
   commissionRule    CommissionRule?
   questions         ProductQuestion[]
   leads             Lead[]
+  sales             Sale[]
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
 
@@ -76,6 +77,7 @@ model Plan {
   product     Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
+  sales       Sale[]
 }
 
 model CommissionRule {
@@ -148,8 +150,47 @@ model Lead {
   stageHistory      LeadStageHistory[]
   qualificationResponses LeadQualificationResponse[]
   meetings          Meeting[]
+  sales             Sale[]
   createdAt         DateTime            @default(now())
   updatedAt         DateTime            @updatedAt
+}
+
+model Sale {
+  id          String   @id @default(cuid())
+  leadId      String
+  productId   String
+  planId      String
+  amountCents Int
+  status      String   @default("AWAITING_PAYMENT")
+  soldAt      DateTime @default(now())
+  notes       String?
+  lead        Lead     @relation(fields: [leadId], references: [id])
+  product     Product  @relation(fields: [productId], references: [id])
+  plan        Plan     @relation(fields: [planId], references: [id])
+  subscription Subscription?
+  payments    Payment[]
+}
+
+model Subscription {
+  id          String   @id @default(cuid())
+  saleId      String   @unique
+  status      String   @default("AWAITING_ACTIVATION")
+  currentCents Int
+  startedAt   DateTime?
+  nextBillingAt DateTime?
+  sale        Sale     @relation(fields: [saleId], references: [id], onDelete: Cascade)
+  payments    Payment[]
+}
+
+model Payment {
+  id             String   @id @default(cuid())
+  saleId         String
+  subscriptionId String?
+  amountCents    Int
+  paidAt         DateTime
+  isFirst        Boolean  @default(false)
+  sale           Sale     @relation(fields: [saleId], references: [id], onDelete: Cascade)
+  subscription   Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
 }
 
 model Meeting {

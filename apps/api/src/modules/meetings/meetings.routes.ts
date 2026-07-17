@@ -34,11 +34,9 @@ meetingsRouter.post('/', async (req, res) => {
   });
   if (conflict)
     return res.status(409).json({ message: 'Conflito de horário detectado.', conflict });
-  res
-    .status(201)
-    .json({
-      meeting: await prisma.meeting.create({
-        data: { ...x, startsAt, endsAt, link: x.link || null }
-      })
-    });
+  res.status(201).json({
+    meeting: await prisma.meeting.create({
+      data: { ...x, startsAt, endsAt, link: x.link || null }
+    })
+  });
 });

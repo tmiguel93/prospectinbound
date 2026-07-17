@@ -2,7 +2,7 @@
 
 ## Módulo atual
 
-Módulo 7 — Vendas, assinaturas e pagamentos (a iniciar)
+Módulo 8 — Motor de comissões (a iniciar)
 
 ## Módulos concluídos
 
@@ -15,7 +15,7 @@ Módulo 7 — Vendas, assinaturas e pagamentos (a iniciar)
 
 ## Último commit
 
-`feat: add internal meeting scheduling`.
+`feat: add sales subscriptions and payment tracking`.
 
 ## Testes executados
 
@@ -31,7 +31,7 @@ Os scripts de seed e backup ainda são marcadores até os módulos responsáveis
 
 ## Próximo módulo
 
-Módulo 7 — Vendas, assinaturas e pagamentos.
+Módulo 8 — Motor de comissões.
 
 ## Decisões técnicas relevantes
 

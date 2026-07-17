@@ -8,6 +8,7 @@ import { dashboardRouter } from './modules/dashboard/dashboard.routes.js';
 import { leadsRouter } from './modules/leads/leads.routes.js';
 import { qualificationRouter } from './modules/qualification/qualification.routes.js';
 import { meetingsRouter } from './modules/meetings/meetings.routes.js';
+import { salesRouter } from './modules/sales/sales.routes.js';
 import { errorHandler } from './shared/error-handler.js';
 
 export const app = express();
@@ -27,4 +28,5 @@ app.use('/api/dashboard', dashboardRouter);
 app.use('/api/leads', leadsRouter);
 app.use('/api/qualifications', qualificationRouter);
 app.use('/api/meetings', meetingsRouter);
+app.use('/api/sales', salesRouter);
 app.use(errorHandler);
