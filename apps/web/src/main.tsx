@@ -8,18 +8,12 @@ import { ProductCatalogPage } from './features/catalog/ProductCatalogPage.js';
 import { LeadsPage } from './features/leads/LeadsPage.js';
 import { AgendaPage } from './features/agenda/AgendaPage.js';
 import { AuditPage, UsersPage } from './features/admin/AdminPage.js';
+import { SalesPage } from './features/sales/SalesPage.js';
 import { apiRequest, type User } from './lib/api.js';
 import { ComingSoonPage } from './pages/ComingSoonPage.js';
 import './styles.css';
 
-const placeholders = [
-  'Pipelines',
-  'Vendas',
-  'Assinaturas',
-  'Comissões',
-  'Relatórios',
-  'Configurações'
-];
+const placeholders = ['Pipelines', 'Assinaturas', 'Comissões', 'Relatórios', 'Configurações'];
 
 function AuthenticatedApp({ user, onLogout }: { user: User; onLogout: () => void }) {
   return (
@@ -31,6 +25,7 @@ function AuthenticatedApp({ user, onLogout }: { user: User; onLogout: () => void
           <Route path="/leads" element={<LeadsPage />} />
           <Route path="/agenda" element={<AgendaPage />} />
           <Route path="/usuarios" element={<UsersPage />} />
+          <Route path="/vendas" element={<SalesPage />} />
           <Route path="/auditoria" element={<AuditPage />} />
           {placeholders.map((title) => (
             <Route
