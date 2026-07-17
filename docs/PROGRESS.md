@@ -2,7 +2,7 @@
 
 ## Módulo atual
 
-Módulo 21 — Relatórios e testes ampliados (em andamento).
+Módulo 22 — Revisão final: tema, qualidade e cobertura adicional (em andamento).
 
 ## Módulos concluídos
 
@@ -27,10 +27,11 @@ Módulo 21 — Relatórios e testes ampliados (em andamento).
 - Módulo 18 — Agenda: responsável e reagendamento com validação de conflito.
 - Módulo 19 — Vendas: alteração de plano e cancelamento de assinatura.
 - Módulo 20 — Pipelines e assinaturas: telas operacionais conectadas aos dados locais.
+- Módulo 21 — Dashboard com dados reais e relatórios comerciais.
 
 ## Último commit
 
-`feat: add pipelines and subscriptions pages`.
+`feat: add real dashboard metrics and reports`.
 
 ## Testes executados
 
@@ -46,7 +47,7 @@ As lacunas pós-MVP foram convertidas em módulos sequenciais e serão tratadas 
 
 ## Próximo módulo
 
-Módulo 21 — Relatórios e testes ampliados.
+Módulo 22 — Revisão final: tema, qualidade e cobertura adicional.
 
 ## Decisões técnicas relevantes
 

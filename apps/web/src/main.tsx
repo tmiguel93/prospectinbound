@@ -12,11 +12,12 @@ import { SalesPage } from './features/sales/SalesPage.js';
 import { CommissionsPage } from './features/commissions/CommissionsPage.js';
 import { SettingsPage } from './features/settings/SettingsPage.js';
 import { PipelinesPage, SubscriptionsPage } from './features/operations/OperationsPages.js';
+import { ReportsPage } from './features/reports/ReportsPage.js';
 import { apiRequest, type User } from './lib/api.js';
 import { ComingSoonPage } from './pages/ComingSoonPage.js';
 import './styles.css';
 
-const placeholders = ['Relatórios'];
+const placeholders: string[] = [];
 
 function AuthenticatedApp({ user, onLogout }: { user: User; onLogout: () => void }) {
   return (
@@ -31,6 +32,7 @@ function AuthenticatedApp({ user, onLogout }: { user: User; onLogout: () => void
           <Route path="/vendas" element={<SalesPage />} />
           <Route path="/pipelines" element={<PipelinesPage />} />
           <Route path="/assinaturas" element={<SubscriptionsPage />} />
+          <Route path="/relatorios" element={<ReportsPage />} />
           <Route path="/comissoes" element={<CommissionsPage />} />
           <Route path="/configuracoes" element={<SettingsPage />} />
           <Route path="/auditoria" element={<AuditPage />} />
