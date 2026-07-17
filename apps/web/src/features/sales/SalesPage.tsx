@@ -19,7 +19,9 @@ export function SalesPage() {
     apiRequest<{ sales: Sale[] }>('/api/sales')
       .then((x) => setSales(x.sales))
       .catch((e) => setError(e.message));
-  useEffect(load, []);
+  useEffect(() => {
+    void load();
+  }, []);
   const confirm = async (id: string, amount: number) => {
     await apiRequest(`/api/sales/${id}/payments`, {
       method: 'POST',
