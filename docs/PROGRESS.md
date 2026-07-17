@@ -2,7 +2,7 @@
 
 ## Módulo atual
 
-Módulo 8 — Motor de comissões (a iniciar)
+Módulo 9 — Usuários, permissões e auditoria (a iniciar)
 
 ## Módulos concluídos
 
@@ -15,7 +15,7 @@ Módulo 8 — Motor de comissões (a iniciar)
 
 ## Último commit
 
-`feat: add sales subscriptions and payment tracking`.
+`feat: add configurable commission engine`.
 
 ## Testes executados
 
@@ -31,7 +31,7 @@ Os scripts de seed e backup ainda são marcadores até os módulos responsáveis
 
 ## Próximo módulo
 
-Módulo 8 — Motor de comissões.
+Módulo 9 — Usuários, permissões e auditoria.
 
 ## Decisões técnicas relevantes
 

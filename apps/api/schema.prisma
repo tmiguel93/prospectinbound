@@ -169,6 +169,7 @@ model Sale {
   plan        Plan     @relation(fields: [planId], references: [id])
   subscription Subscription?
   payments    Payment[]
+  commissions CommissionEntry[]
 }
 
 model Subscription {
@@ -191,6 +192,21 @@ model Payment {
   isFirst        Boolean  @default(false)
   sale           Sale     @relation(fields: [saleId], references: [id], onDelete: Cascade)
   subscription   Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
+  commissions    CommissionEntry[]
+}
+
+model CommissionEntry {
+  id          String   @id @default(cuid())
+  paymentId   String
+  saleId      String
+  type        String
+  baseCents   Int
+  percentageBps Int
+  amountCents Int
+  status      String   @default("CONFIRMED")
+  createdAt   DateTime @default(now())
+  payment     Payment  @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  sale        Sale     @relation(fields: [saleId], references: [id], onDelete: Cascade)
 }
 
 model Meeting {

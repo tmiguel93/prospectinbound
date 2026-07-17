@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { z } from 'zod';
 import { prisma } from '../../lib/prisma.js';
 import { requireAuth } from '../auth/auth.middleware.js';
+import { calculateInitialCommission } from '../commissions/commission.service.js';
 const saleSchema = z.object({
   leadId: z.string().cuid(),
   productId: z.string().cuid(),
@@ -48,6 +49,24 @@ salesRouter.post('/:id/payments', async (req, res) => {
         isFirst: sale.payments.length === 0
       }
     });
+    const rule = await tx.commissionRule.findUnique({ where: { productId: sale.productId } });
+    if (rule) {
+      const calculated = calculateInitialCommission(
+        sale.payments.length === 0 ? rule.fixedActivationCents : 0,
+        rule.recurringPercentageBps,
+        x.amountCents
+      );
+      await tx.commissionEntry.create({
+        data: {
+          paymentId: p.id,
+          saleId: sale.id,
+          type: sale.payments.length === 0 ? 'ACTIVATION_AND_RECURRING' : 'RECURRING',
+          baseCents: x.amountCents,
+          percentageBps: rule.recurringPercentageBps,
+          amountCents: calculated.totalCents
+        }
+      });
+    }
     await tx.sale.update({ where: { id: sale.id }, data: { status: 'PAYMENT_CONFIRMED' } });
     if (sale.subscription)
       await tx.subscription.update({
