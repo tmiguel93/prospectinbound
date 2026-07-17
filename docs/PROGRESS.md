@@ -2,7 +2,7 @@
 
 ## Módulo atual
 
-Módulo 16 — Usuários: gestão completa, permissões e desativação (em andamento).
+Módulo 17 — Auditoria: cobertura de eventos e filtros de consulta (em andamento).
 
 ## Módulos concluídos
 
@@ -22,10 +22,11 @@ Módulo 16 — Usuários: gestão completa, permissões e desativação (em anda
 - Módulo 13 — Operação de comissões: painel, pagamento e estorno.
 - Módulo 14 — Importação CSV: prévia, mapeamento, validação e relatório de duplicidades.
 - Módulo 15 — Backups: listagem, criação e restauração protegida.
+- Módulo 16 — Usuários: criação, papéis e ativação/desativação protegida.
 
 ## Último commit
 
-`feat: add protected local backup restore`.
+`feat: complete user management controls`.
 
 ## Testes executados
 
@@ -41,7 +42,7 @@ As lacunas pós-MVP foram convertidas em módulos sequenciais e serão tratadas 
 
 ## Próximo módulo
 
-Módulo 16 — Usuários: gestão completa, permissões e desativação.
+Módulo 17 — Auditoria: cobertura de eventos e filtros de consulta.
 
 ## Decisões técnicas relevantes
 

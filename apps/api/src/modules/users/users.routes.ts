@@ -2,49 +2,94 @@ import { Router } from 'express';
 import bcrypt from 'bcryptjs';
 import { z } from 'zod';
 import { prisma } from '../../lib/prisma.js';
+import { audit } from '../audit/audit.service.js';
 import { requireAdmin, requireAuth } from '../auth/auth.middleware.js';
+
 const createSchema = z.object({
-  name: z.string().min(2),
-  email: z.string().email(),
+  name: z.string().trim().min(2).max(120),
+  email: z.string().trim().email(),
   password: z.string().min(8),
   role: z.enum(['ADMIN', 'SELLER']).default('SELLER')
 });
+const updateSchema = z.object({
+  name: z.string().trim().min(2).max(120).optional(),
+  role: z.enum(['ADMIN', 'SELLER']).optional(),
+  active: z.boolean().optional(),
+  password: z.string().min(8).optional()
+});
+const publicSelect = {
+  id: true,
+  name: true,
+  email: true,
+  role: true,
+  active: true,
+  createdAt: true
+};
+
+async function ensureAdminRemains(id: string, changes: z.infer<typeof updateSchema>) {
+  const target = await prisma.user.findUnique({ where: { id } });
+  if (!target) return null;
+  const removingAdmin =
+    target.role === 'ADMIN' &&
+    target.active &&
+    (changes.role === 'SELLER' || changes.active === false);
+  if (removingAdmin && (await prisma.user.count({ where: { role: 'ADMIN', active: true } })) < 2)
+    throw new Error('Não é possível remover ou desativar o último administrador ativo.');
+  return target;
+}
+
 export const usersRouter = Router();
 usersRouter.use(requireAuth, requireAdmin);
-usersRouter.get('/', async (_q, res) =>
-  res.json({
-    users: await prisma.user.findMany({
-      select: { id: true, name: true, email: true, role: true, active: true, createdAt: true },
-      orderBy: { name: 'asc' }
-    })
-  })
-);
-usersRouter.post('/', async (req, res) => {
-  const x = createSchema.parse(req.body);
+
+usersRouter.get('/', async (_request, response) => {
+  response.json({
+    users: await prisma.user.findMany({ select: publicSelect, orderBy: { name: 'asc' } })
+  });
+});
+
+usersRouter.post('/', async (request, response) => {
+  const input = createSchema.parse(request.body);
+  if (await prisma.user.findUnique({ where: { email: input.email } }))
+    return response.status(409).json({ message: 'Já existe um usuário com este e-mail.' });
   const user = await prisma.user.create({
     data: {
-      name: x.name,
-      email: x.email,
-      passwordHash: await bcrypt.hash(x.password, 12),
-      role: x.role
-    }
+      name: input.name,
+      email: input.email,
+      passwordHash: await bcrypt.hash(input.password, 12),
+      role: input.role
+    },
+    select: publicSelect
   });
-  await prisma.auditLog.create({
-    data: {
-      userId: res.locals.user.id,
-      action: 'CREATE',
-      entity: 'User',
-      entityId: user.id,
-      after: JSON.stringify({ email: user.email, role: user.role })
-    }
-  });
-  res.status(201).json({
-    user: {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      active: user.active
-    }
-  });
+  await audit(response, 'CREATE', 'User', user.id, { email: user.email, role: user.role });
+  response.status(201).json({ user });
+});
+
+usersRouter.patch('/:id', async (request, response) => {
+  const id = Array.isArray(request.params.id) ? request.params.id[0] : request.params.id;
+  const input = updateSchema.parse(request.body);
+  const { password, ...changes } = input;
+  if (!Object.keys(input).length)
+    return response.status(400).json({ message: 'Informe ao menos uma alteração.' });
+  try {
+    const before = await ensureAdminRemains(id, changes);
+    if (!before) return response.status(404).json({ message: 'Usuário não encontrado.' });
+    if (id === response.locals.user.id && input.active === false)
+      return response.status(400).json({ message: 'Você não pode desativar seu próprio acesso.' });
+    const user = await prisma.user.update({
+      where: { id },
+      data: { ...changes, ...(password ? { passwordHash: await bcrypt.hash(password, 12) } : {}) },
+      select: publicSelect
+    });
+    await audit(response, 'UPDATE', 'User', user.id, {
+      before: { role: before.role, active: before.active },
+      after: { role: user.role, active: user.active }
+    });
+    response.json({ user });
+  } catch (error) {
+    response
+      .status(400)
+      .json({
+        message: error instanceof Error ? error.message : 'Não foi possível atualizar o usuário.'
+      });
+  }
 });
