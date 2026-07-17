@@ -21,7 +21,7 @@
     "db:migrate": "npm run prisma:migrate -w @prospectinbound/api",
     "db:seed": "npm run prisma:seed -w @prospectinbound/api",
     "db:studio": "npm run prisma:studio -w @prospectinbound/api",
-    "backup": "echo Backup será configurado no Módulo 10.",
+    "backup": "npm run backup -w @prospectinbound/api",
     "setup": "powershell -ExecutionPolicy Bypass -File ./setup-local.ps1"
   },
   "devDependencies": {

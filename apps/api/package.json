@@ -12,7 +12,8 @@
     "prisma:generate": "prisma generate --schema schema.prisma",
     "prisma:migrate": "dotenv -e ../../.env -- prisma migrate deploy --schema schema.prisma",
     "prisma:studio": "dotenv -e ../../.env -- prisma studio --schema schema.prisma",
-    "prisma:seed": "tsx prisma/seed.ts"
+    "prisma:seed": "tsx prisma/seed.ts",
+    "backup": "tsx -e \"import('./src/modules/backup/backup.service.ts').then(({createBackup})=>createBackup().then(console.log))\""
   },
   "dependencies": {
     "@prisma/client": "^6.19.3",
