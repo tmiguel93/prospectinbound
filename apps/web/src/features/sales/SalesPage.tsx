@@ -29,6 +29,18 @@ export function SalesPage() {
     });
     load();
   };
+  const cancel = async (id: string) => {
+    if (!window.confirm('Cancelar esta venda e a assinatura vinculada?')) return;
+    try {
+      await apiRequest(`/api/sales/${id}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ status: 'CANCELED' })
+      });
+      load();
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : 'Não foi possível cancelar a venda.');
+    }
+  };
   return (
     <section>
       <p className="eyebrow text-cyan-700">Comercial</p>
@@ -48,11 +60,18 @@ export function SalesPage() {
                   {s.payments.length}
                 </p>
               </div>
-              {s.status !== 'PAYMENT_CONFIRMED' && (
-                <button className="primary-button" onClick={() => confirm(s.id, s.amountCents)}>
-                  Confirmar pagamento
-                </button>
-              )}
+              <div className="flex gap-2">
+                {s.status !== 'PAYMENT_CONFIRMED' && s.status !== 'CANCELED' && (
+                  <button className="primary-button" onClick={() => confirm(s.id, s.amountCents)}>
+                    Confirmar pagamento
+                  </button>
+                )}
+                {s.status !== 'CANCELED' && (
+                  <button className="secondary-button" onClick={() => void cancel(s.id)}>
+                    Cancelar
+                  </button>
+                )}
+              </div>
             </div>
           </article>
         ))}

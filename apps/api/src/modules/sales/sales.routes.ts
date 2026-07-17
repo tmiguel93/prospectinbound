@@ -11,6 +11,11 @@ const saleSchema = z.object({
   amountCents: z.number().int().positive(),
   notes: z.string().optional()
 });
+const updateSchema = z.object({
+  planId: z.string().cuid().optional(),
+  amountCents: z.number().int().positive().optional(),
+  status: z.enum(['CANCELED']).optional()
+});
 export const salesRouter = Router();
 salesRouter.use(requireAuth);
 salesRouter.get('/', async (_q, res) =>
@@ -85,4 +90,46 @@ salesRouter.post('/:id/payments', async (req, res) => {
     amountCents: payment.amountCents
   });
   res.status(201).json({ payment });
+});
+
+salesRouter.patch('/:id', async (req, res) => {
+  const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+  const input = updateSchema.parse(req.body);
+  const sale = await prisma.sale.findUnique({ where: { id }, include: { subscription: true } });
+  if (!sale) return res.status(404).json({ message: 'Venda não encontrada.' });
+  if (sale.status === 'CANCELED')
+    return res.status(409).json({ message: 'Esta venda já está cancelada.' });
+  if (input.status === 'CANCELED') {
+    await prisma.$transaction(async (tx) => {
+      await tx.sale.update({ where: { id: sale.id }, data: { status: 'CANCELED' } });
+      if (sale.subscription)
+        await tx.subscription.update({
+          where: { id: sale.subscription.id },
+          data: { status: 'CANCELED' }
+        });
+    });
+    await audit(res, 'CANCEL', 'Sale', sale.id, {});
+    return res.json({ status: 'CANCELED' });
+  }
+  if (!input.planId)
+    return res.status(400).json({ message: 'Informe um novo plano ou cancelamento.' });
+  const plan = await prisma.plan.findFirst({
+    where: { id: input.planId, productId: sale.productId, active: true }
+  });
+  if (!plan) return res.status(400).json({ message: 'Plano inválido para esta venda.' });
+  const amountCents = input.amountCents ?? plan.priceCents;
+  const updated = await prisma.$transaction(async (tx) => {
+    const result = await tx.sale.update({
+      where: { id: sale.id },
+      data: { planId: plan.id, amountCents }
+    });
+    if (sale.subscription)
+      await tx.subscription.update({
+        where: { id: sale.subscription.id },
+        data: { currentCents: amountCents }
+      });
+    return result;
+  });
+  await audit(res, 'CHANGE_PLAN', 'Sale', sale.id, { planId: plan.id, amountCents });
+  res.json({ sale: updated });
 });

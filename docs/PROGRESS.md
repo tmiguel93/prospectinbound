@@ -2,7 +2,7 @@
 
 ## Módulo atual
 
-Módulo 19 — Vendas: criação, alteração e cancelamento (em andamento).
+Módulo 20 — Pipelines e assinaturas: telas operacionais (em andamento).
 
 ## Módulos concluídos
 
@@ -25,10 +25,11 @@ Módulo 19 — Vendas: criação, alteração e cancelamento (em andamento).
 - Módulo 16 — Usuários: criação, papéis e ativação/desativação protegida.
 - Módulo 17 — Auditoria: filtros, paginação e cobertura de eventos comerciais.
 - Módulo 18 — Agenda: responsável e reagendamento com validação de conflito.
+- Módulo 19 — Vendas: alteração de plano e cancelamento de assinatura.
 
 ## Último commit
 
-`feat: add meeting ownership and rescheduling`.
+`feat: add sales plan changes and cancellation`.
 
 ## Testes executados
 
@@ -44,7 +45,7 @@ As lacunas pós-MVP foram convertidas em módulos sequenciais e serão tratadas 
 
 ## Próximo módulo
 
-Módulo 19 — Vendas: criação, alteração e cancelamento.
+Módulo 20 — Pipelines e assinaturas: telas operacionais.
 
 ## Decisões técnicas relevantes
 
