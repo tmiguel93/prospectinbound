@@ -33,6 +33,29 @@ body {
   color: #e2e8f0;
   border-color: #475569;
 }
+:root[data-theme='dark'] .rounded-xl.border,
+:root[data-theme='dark'] .overflow-hidden.rounded-xl.border {
+  border-color: #334155;
+  background: #0f172a;
+}
+:root[data-theme='dark'] .bg-slate-50,
+:root[data-theme='dark'] thead {
+  background: #1e293b;
+}
+:root[data-theme='dark'] .divide-y > :not([hidden]) ~ :not([hidden]),
+:root[data-theme='dark'] .border-t {
+  border-color: #334155;
+}
+:root[data-theme='dark'] .text-slate-500,
+:root[data-theme='dark'] .text-slate-600 {
+  color: #94a3b8;
+}
+:root[data-theme='dark'] .bg-rose-50 {
+  background: #4c0519;
+}
+:root[data-theme='dark'] .bg-cyan-50 {
+  background: #164e63;
+}
 .theme-toggle {
   display: inline-flex;
   align-items: center;

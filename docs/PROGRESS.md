@@ -2,7 +2,7 @@
 
 ## Módulo atual
 
-Módulo 22 — Revisão final: tema, qualidade e cobertura adicional (em andamento).
+Revisão pós-módulos concluída.
 
 ## Módulos concluídos
 
@@ -28,10 +28,11 @@ Módulo 22 — Revisão final: tema, qualidade e cobertura adicional (em andamen
 - Módulo 19 — Vendas: alteração de plano e cancelamento de assinatura.
 - Módulo 20 — Pipelines e assinaturas: telas operacionais conectadas aos dados locais.
 - Módulo 21 — Dashboard com dados reais e relatórios comerciais.
+- Módulo 22 — Revisão de contraste para tema claro/escuro e validação global.
 
 ## Último commit
 
-`feat: add real dashboard metrics and reports`.
+`style: improve dark theme surface coverage`.
 
 ## Testes executados
 
@@ -47,7 +48,7 @@ As lacunas pós-MVP foram convertidas em módulos sequenciais e serão tratadas 
 
 ## Próximo módulo
 
-Módulo 22 — Revisão final: tema, qualidade e cobertura adicional.
+Sem pendências técnicas bloqueantes. Próxima evolução: testes E2E visuais e filtros avançados nos relatórios.
 
 ## Decisões técnicas relevantes
 
