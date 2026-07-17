@@ -13,17 +13,20 @@ CRM local para prospecção comercial de produtos SaaS, desenvolvido em módulos
 2. Execute `start-local.bat` ou `start-local.ps1`.
 3. Abra `http://localhost:3000`.
 
+Na primeira execução, a página exibirá o formulário para criar o administrador local. A senha é armazenada somente como hash seguro.
+
 Durante o desenvolvimento, use `npm run dev`. A rota de verificação da API é `GET /health`.
 
 ## Comandos
 
-| Comando             | Finalidade                                |
-| ------------------- | ----------------------------------------- |
-| `npm run dev`       | Inicia API e frontend em desenvolvimento. |
-| `npm run build`     | Compila todos os workspaces.              |
-| `npm run start`     | Inicia a versão compilada.                |
-| `npm run lint`      | Executa o lint.                           |
-| `npm run typecheck` | Verifica os tipos TypeScript.             |
-| `npm run test`      | Executa os testes.                        |
+| Comando              | Finalidade                                |
+| -------------------- | ----------------------------------------- |
+| `npm run dev`        | Inicia API e frontend em desenvolvimento. |
+| `npm run build`      | Compila todos os workspaces.              |
+| `npm run start`      | Inicia a versão compilada.                |
+| `npm run lint`       | Executa o lint.                           |
+| `npm run typecheck`  | Verifica os tipos TypeScript.             |
+| `npm run test`       | Executa os testes.                        |
+| `npm run db:migrate` | Aplica migrations do banco SQLite local.  |
 
 Consulte `docs/PROGRESS.md` para acompanhar o módulo em implementação.

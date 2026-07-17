@@ -2,34 +2,33 @@
 
 ## Módulo atual
 
-Módulo 1 — Banco e autenticação (em andamento)
+Módulo 2 — Layout e dashboard base (a iniciar)
 
 ## Módulos concluídos
 
 - Módulo 0 — Inicialização.
+- Módulo 1 — Banco e autenticação.
 
 ## Último commit
 
-`chore: initialize local crm workspace`.
+`feat: add database schema and local authentication`.
 
 ## Testes executados
 
-- `npm run lint`
-- `npm run typecheck`
-- `npm run test` (1 teste da API aprovado)
-- `npm run build`
+- Módulo 0: `npm run lint`, `npm run typecheck`, `npm run test` e `npm run build`.
+- Módulo 1: `npm run lint`, `npm run typecheck`, `npm run test` (3 testes aprovados) e `npm run build`.
 
 ## Pendências conhecidas
 
-Os scripts de seed, studio e backup ainda são marcadores até os módulos responsáveis.
+Os scripts de seed e backup ainda são marcadores até os módulos responsáveis. O banco SQLite precisa ser criado pelo instalador antes da primeira migration.
 
 ## Próximo módulo
 
-Módulo 1 — Banco SQLite, Prisma e autenticação local.
+Módulo 2 — Layout, navegação e dashboard base.
 
 ## Decisões técnicas relevantes
 
 - Monorepo com npm workspaces.
 - API Express e frontend React/Vite em TypeScript.
-- Banco de dados e autenticação serão introduzidos apenas no Módulo 1.
 - O build de produção serve o frontend pela API Express.
+- O Prisma usa SQLite e migrations versionadas; o primeiro administrador é criado pela interface.

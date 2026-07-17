@@ -10,6 +10,10 @@ if (-not (Test-Path '.env')) {
 }
 
 npm install
+New-Item -ItemType Directory -Path 'data' -Force | Out-Null
+if (-not (Test-Path 'data/crm-local.db')) {
+  New-Item -ItemType File -Path 'data/crm-local.db' | Out-Null
+}
+npm run db:migrate
 npm run build
 Write-Host 'Configuração concluída. Para iniciar, execute: .\\start-local.ps1'
-

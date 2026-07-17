@@ -1,3 +1,5 @@
 # Banco de dados
 
-O banco SQLite local e o schema Prisma serão introduzidos no Módulo 1. A configuração prevista usa `data/crm-local.db` e nunca deve ser versionada.
+O banco SQLite local é `data/crm-local.db` e nunca deve ser versionado. O schema Prisma está em `apps/api/schema.prisma`; a migration inicial cria a tabela `User`.
+
+O instalador cria o arquivo SQLite vazio e executa `npm run db:migrate`. A primeira conta é criada pela interface, não por seed.
