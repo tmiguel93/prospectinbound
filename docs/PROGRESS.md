@@ -2,7 +2,7 @@
 
 ## Módulo atual
 
-Módulo 6 — Agenda (a iniciar)
+Módulo 7 — Vendas, assinaturas e pagamentos (a iniciar)
 
 ## Módulos concluídos
 
@@ -15,7 +15,7 @@ Módulo 6 — Agenda (a iniciar)
 
 ## Último commit
 
-`feat: add qualification forms and lead scoring`.
+`feat: add internal meeting scheduling`.
 
 ## Testes executados
 
@@ -31,7 +31,7 @@ Os scripts de seed e backup ainda são marcadores até os módulos responsáveis
 
 ## Próximo módulo
 
-Módulo 6 — Agenda.
+Módulo 7 — Vendas, assinaturas e pagamentos.
 
 ## Decisões técnicas relevantes
 
