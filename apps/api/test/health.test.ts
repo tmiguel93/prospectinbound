@@ -179,3 +179,38 @@ describe('CSV lead import', () => {
     ]);
   });
 });
+
+describe('local backups', () => {
+  beforeEach(async () => {
+    await prisma.user.deleteMany();
+  });
+
+  afterAll(async () => {
+    await prisma.$disconnect();
+  });
+
+  it('creates a listed backup and requires explicit confirmation for restoration', async () => {
+    const stamp = Date.now();
+    const agent = request.agent(app);
+    await agent.post('/api/auth/setup').send({
+      name: 'Admin',
+      email: `backup-${stamp}@example.com`,
+      password: 'senha-segura-123'
+    });
+    const created = await agent.post('/api/backups');
+    expect(created.status).toBe(201);
+    expect(created.body.file).toMatch(/^crm-.*\.db$/);
+    expect((await agent.get('/api/backups')).body.files).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ name: created.body.file, size: expect.any(Number) })
+      ])
+    );
+    expect(
+      (
+        await agent
+          .post('/api/backups/restore')
+          .send({ file: created.body.file, confirmation: 'confirmar' })
+      ).status
+    ).toBe(400);
+  });
+});

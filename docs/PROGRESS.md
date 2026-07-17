@@ -2,7 +2,7 @@
 
 ## Módulo atual
 
-Módulo 15 — Backups: restauração segura e interface de operação (em andamento).
+Módulo 16 — Usuários: gestão completa, permissões e desativação (em andamento).
 
 ## Módulos concluídos
 
@@ -21,17 +21,18 @@ Módulo 15 — Backups: restauração segura e interface de operação (em andam
 - Módulo 12 — Documentação final e revisão global.
 - Módulo 13 — Operação de comissões: painel, pagamento e estorno.
 - Módulo 14 — Importação CSV: prévia, mapeamento, validação e relatório de duplicidades.
+- Módulo 15 — Backups: listagem, criação e restauração protegida.
 
 ## Último commit
 
-`feat: add CSV lead import workflow`.
+`feat: add protected local backup restore`.
 
 ## Testes executados
 
 - `npm run format:check`
 - `npm run lint`
 - `npm run typecheck`
-- `npm run test` — 7 testes aprovados.
+- `npm run test` — 8 testes aprovados.
 - `npm run build`
 
 ## Pendências conhecidas
@@ -40,7 +41,7 @@ As lacunas pós-MVP foram convertidas em módulos sequenciais e serão tratadas 
 
 ## Próximo módulo
 
-Módulo 15 — Backups: restauração segura e interface de operação.
+Módulo 16 — Usuários: gestão completa, permissões e desativação.
 
 ## Decisões técnicas relevantes
 
