@@ -30,3 +30,5 @@ Durante o desenvolvimento, use `npm run dev`. A rota de verificação da API é 
 | `npm run db:migrate` | Aplica migrations do banco SQLite local.  |
 
 Consulte `docs/PROGRESS.md` para acompanhar o módulo em implementação.
+
+Consulte também `docs/REVIEW.md` para as verificações e melhorias futuras.

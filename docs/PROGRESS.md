@@ -2,7 +2,7 @@
 
 ## Módulo atual
 
-Módulo 9 — Usuários, permissões e auditoria (a iniciar)
+Módulo 12 — Documentação final e revisão global (concluído)
 
 ## Módulos concluídos
 
@@ -15,7 +15,7 @@ Módulo 9 — Usuários, permissões e auditoria (a iniciar)
 
 ## Último commit
 
-`feat: add configurable commission engine`.
+`docs: finalize local installation and operation guide`.
 
 ## Testes executados
 
@@ -31,7 +31,7 @@ Os scripts de seed e backup ainda são marcadores até os módulos responsáveis
 
 ## Próximo módulo
 
-Módulo 9 — Usuários, permissões e auditoria.
+Revisão final concluída.
 
 ## Decisões técnicas relevantes
 
