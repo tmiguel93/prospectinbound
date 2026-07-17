@@ -2,7 +2,7 @@
 
 ## Módulo atual
 
-Módulo 14 — Importação CSV: arquivo, prévia, mapeamento e erros (em andamento).
+Módulo 15 — Backups: restauração segura e interface de operação (em andamento).
 
 ## Módulos concluídos
 
@@ -20,17 +20,18 @@ Módulo 14 — Importação CSV: arquivo, prévia, mapeamento e erros (em andame
 - Módulo 11 — Validação automatizada do MVP.
 - Módulo 12 — Documentação final e revisão global.
 - Módulo 13 — Operação de comissões: painel, pagamento e estorno.
+- Módulo 14 — Importação CSV: prévia, mapeamento, validação e relatório de duplicidades.
 
 ## Último commit
 
-`feat: complete commission operations dashboard`.
+`feat: add CSV lead import workflow`.
 
 ## Testes executados
 
 - `npm run format:check`
 - `npm run lint`
 - `npm run typecheck`
-- `npm run test` — 6 testes aprovados.
+- `npm run test` — 7 testes aprovados.
 - `npm run build`
 
 ## Pendências conhecidas
@@ -39,7 +40,7 @@ As lacunas pós-MVP foram convertidas em módulos sequenciais e serão tratadas 
 
 ## Próximo módulo
 
-Módulo 14 — Importação CSV: arquivo, prévia, mapeamento e relatório de erros.
+Módulo 15 — Backups: restauração segura e interface de operação.
 
 ## Decisões técnicas relevantes
 

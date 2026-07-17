@@ -1,9 +1,10 @@
 import { DndContext, useDraggable, useDroppable, type DragEndEvent } from '@dnd-kit/core';
-import { Plus, Search } from 'lucide-react';
+import { Plus, Search, Upload } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { apiRequest } from '../../lib/api.js';
 import { QualificationModal } from './QualificationModal.js';
+import { ImportLeadsModal } from './ImportLeadsModal.js';
 
 type Stage = { id: string; name: string; color: string; position: number };
 type Catalog = {
@@ -99,6 +100,7 @@ export function LeadsPage() {
   const [productId, setProductId] = useState('');
   const [search, setSearch] = useState('');
   const [open, setOpen] = useState(false);
+  const [importOpen, setImportOpen] = useState(false);
   const [error, setError] = useState<string>();
   const { register, handleSubmit } = useForm<FormValues>({
     defaultValues: { source: 'Prospecção própria', priority: 'Normal' }
@@ -164,10 +166,16 @@ export function LeadsPage() {
           <p className="eyebrow text-cyan-700">Prospecção</p>
           <h1 className="text-2xl font-bold">Leads e Kanban</h1>
         </div>
-        <button className="primary-button" onClick={() => setOpen(true)} type="button">
-          <Plus size={16} />
-          Novo lead
-        </button>
+        <div className="flex gap-2">
+          <button className="secondary-button" onClick={() => setImportOpen(true)} type="button">
+            <Upload size={16} />
+            Importar CSV
+          </button>
+          <button className="primary-button" onClick={() => setOpen(true)} type="button">
+            <Plus size={16} />
+            Novo lead
+          </button>
+        </div>
       </div>
       <div className="mb-5 flex flex-wrap gap-3">
         <select
@@ -273,6 +281,16 @@ export function LeadsPage() {
           leadId={qualifyingLeadId}
           onClose={() => setQualifyingLeadId(undefined)}
           onSaved={load}
+        />
+      )}
+      {importOpen && (
+        <ImportLeadsModal
+          products={catalog?.products ?? []}
+          onClose={() => setImportOpen(false)}
+          onImported={() => {
+            setImportOpen(false);
+            void load();
+          }}
         />
       )}
     </section>

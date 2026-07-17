@@ -26,6 +26,12 @@ export async function apiRequest<T>(path: string, options?: RequestInit): Promis
     headers: { 'Content-Type': 'application/json', ...options?.headers }
   });
   const body = response.status === 204 ? undefined : await response.json();
-  if (!response.ok) throw new Error(body?.message ?? 'Não foi possível concluir a solicitação.');
+  if (!response.ok) {
+    const error = Object.assign(
+      new Error(body?.message ?? 'Não foi possível concluir a solicitação.'),
+      body
+    );
+    throw error;
+  }
   return body as T;
 }

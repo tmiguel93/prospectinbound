@@ -119,3 +119,63 @@ describe('catalog wizard', () => {
     );
   });
 });
+
+describe('CSV lead import', () => {
+  beforeEach(async () => {
+    await prisma.user.deleteMany();
+  });
+
+  afterAll(async () => {
+    await prisma.$disconnect();
+  });
+
+  it('imports valid rows and returns a line-level duplicate report', async () => {
+    const stamp = Date.now();
+    const partner = await prisma.partner.create({ data: { name: `Parceiro importação ${stamp}` } });
+    const pipeline = await prisma.pipeline.create({
+      data: { name: `Pipeline importação ${stamp}` }
+    });
+    const stage = await prisma.pipelineStage.create({
+      data: {
+        pipelineId: pipeline.id,
+        name: 'Entrada',
+        color: '#0891b2',
+        position: 0,
+        isInitial: true
+      }
+    });
+    const product = await prisma.product.create({
+      data: {
+        partnerId: partner.id,
+        pipelineId: pipeline.id,
+        name: `Produto importação ${stamp}`,
+        segment: 'Teste'
+      }
+    });
+    const agent = request.agent(app);
+    await agent.post('/api/auth/setup').send({
+      name: 'Admin',
+      email: `import-${stamp}@example.com`,
+      password: 'senha-segura-123'
+    });
+    const payload = {
+      productId: product.id,
+      pipelineId: pipeline.id,
+      stageId: stage.id,
+      rows: [
+        {
+          establishmentName: 'Oficina Importada',
+          email: `contato-${stamp}@example.com`,
+          city: 'São Paulo',
+          state: 'SP'
+        }
+      ]
+    };
+    expect((await agent.post('/api/imports/leads').send(payload)).body.count).toBe(1);
+    const duplicate = await agent.post('/api/imports/leads').send(payload);
+    expect(duplicate.status).toBe(422);
+    expect(duplicate.body.errors).toEqual([
+      { row: 2, message: 'E-mail, telefone ou WhatsApp duplicado.' }
+    ]);
+  });
+});
