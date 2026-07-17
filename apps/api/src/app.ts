@@ -6,6 +6,7 @@ import { authRouter } from './modules/auth/auth.routes.js';
 import { catalogRouter } from './modules/catalog/catalog.routes.js';
 import { dashboardRouter } from './modules/dashboard/dashboard.routes.js';
 import { leadsRouter } from './modules/leads/leads.routes.js';
+import { qualificationRouter } from './modules/qualification/qualification.routes.js';
 import { errorHandler } from './shared/error-handler.js';
 
 export const app = express();
@@ -23,4 +24,5 @@ app.use('/api/auth', authRouter);
 app.use('/api/catalog', catalogRouter);
 app.use('/api/dashboard', dashboardRouter);
 app.use('/api/leads', leadsRouter);
+app.use('/api/qualifications', qualificationRouter);
 app.use(errorHandler);

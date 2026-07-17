@@ -3,6 +3,7 @@ import { Plus, Search } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { apiRequest } from '../../lib/api.js';
+import { QualificationModal } from './QualificationModal.js';
 
 type Stage = { id: string; name: string; color: string; position: number };
 type Catalog = {
@@ -40,7 +41,7 @@ type FormValues = {
   notes: string;
 };
 
-function LeadCard({ lead }: { lead: Lead }) {
+function LeadCard({ lead, onQualify }: { lead: Lead; onQualify: () => void }) {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({ id: lead.id });
   return (
     <article
@@ -48,6 +49,7 @@ function LeadCard({ lead }: { lead: Lead }) {
       {...listeners}
       {...attributes}
       className="lead-card"
+      onDoubleClick={onQualify}
       style={{
         transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined
       }}
@@ -65,7 +67,15 @@ function LeadCard({ lead }: { lead: Lead }) {
     </article>
   );
 }
-function Column({ stage, leads }: { stage: Stage; leads: Lead[] }) {
+function Column({
+  stage,
+  leads,
+  onQualify
+}: {
+  stage: Stage;
+  leads: Lead[];
+  onQualify: (leadId: string) => void;
+}) {
   const { setNodeRef } = useDroppable({ id: stage.id });
   return (
     <section className="kanban-column" ref={setNodeRef}>
@@ -75,7 +85,7 @@ function Column({ stage, leads }: { stage: Stage; leads: Lead[] }) {
       </header>
       <div className="space-y-3">
         {leads.map((lead) => (
-          <LeadCard key={lead.id} lead={lead} />
+          <LeadCard key={lead.id} lead={lead} onQualify={() => onQualify(lead.id)} />
         ))}
       </div>
     </section>
@@ -84,6 +94,7 @@ function Column({ stage, leads }: { stage: Stage; leads: Lead[] }) {
 
 export function LeadsPage() {
   const [catalog, setCatalog] = useState<Catalog>();
+  const [qualifyingLeadId, setQualifyingLeadId] = useState<string>();
   const [leads, setLeads] = useState<Lead[]>([]);
   const [productId, setProductId] = useState('');
   const [search, setSearch] = useState('');
@@ -191,7 +202,12 @@ export function LeadsPage() {
         <DndContext onDragEnd={move}>
           <div className="kanban-board">
             {stages.map((stage) => (
-              <Column key={stage.id} stage={stage} leads={grouped[stage.id] ?? []} />
+              <Column
+                key={stage.id}
+                stage={stage}
+                leads={grouped[stage.id] ?? []}
+                onQualify={setQualifyingLeadId}
+              />
             ))}
           </div>
         </DndContext>
@@ -251,6 +267,13 @@ export function LeadsPage() {
             </form>
           </section>
         </div>
+      )}
+      {qualifyingLeadId && (
+        <QualificationModal
+          leadId={qualifyingLeadId}
+          onClose={() => setQualifyingLeadId(undefined)}
+          onSaved={load}
+        />
       )}
     </section>
   );

@@ -2,7 +2,7 @@
 
 ## Módulo atual
 
-Módulo 5 — Qualificação e score (a iniciar)
+Módulo 6 — Agenda (a iniciar)
 
 ## Módulos concluídos
 
@@ -11,10 +11,11 @@ Módulo 5 — Qualificação e score (a iniciar)
 - Módulo 2 — Layout e dashboard base.
 - Módulo 3 — Parceiros, produtos e pipelines.
 - Módulo 4 — Leads e Kanban.
+- Módulo 5 — Qualificação e score.
 
 ## Último commit
 
-`feat: add lead management and kanban workflow`.
+`feat: add qualification forms and lead scoring`.
 
 ## Testes executados
 
@@ -30,7 +31,7 @@ Os scripts de seed e backup ainda são marcadores até os módulos responsáveis
 
 ## Próximo módulo
 
-Módulo 5 — Qualificação e score.
+Módulo 6 — Agenda.
 
 ## Decisões técnicas relevantes
 
