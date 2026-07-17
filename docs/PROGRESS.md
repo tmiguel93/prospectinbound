@@ -2,7 +2,7 @@
 
 ## Módulo atual
 
-Módulo 17 — Auditoria: cobertura de eventos e filtros de consulta (em andamento).
+Módulo 18 — Agenda: visões, reagendamento e responsável (em andamento).
 
 ## Módulos concluídos
 
@@ -23,10 +23,11 @@ Módulo 17 — Auditoria: cobertura de eventos e filtros de consulta (em andamen
 - Módulo 14 — Importação CSV: prévia, mapeamento, validação e relatório de duplicidades.
 - Módulo 15 — Backups: listagem, criação e restauração protegida.
 - Módulo 16 — Usuários: criação, papéis e ativação/desativação protegida.
+- Módulo 17 — Auditoria: filtros, paginação e cobertura de eventos comerciais.
 
 ## Último commit
 
-`feat: complete user management controls`.
+`feat: expand audit coverage and filters`.
 
 ## Testes executados
 
@@ -42,7 +43,7 @@ As lacunas pós-MVP foram convertidas em módulos sequenciais e serão tratadas 
 
 ## Próximo módulo
 
-Módulo 17 — Auditoria: cobertura de eventos e filtros de consulta.
+Módulo 18 — Agenda: visões, reagendamento e responsável.
 
 ## Decisões técnicas relevantes
 

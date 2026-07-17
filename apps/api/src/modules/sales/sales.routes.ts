@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { z } from 'zod';
 import { prisma } from '../../lib/prisma.js';
 import { requireAuth } from '../auth/auth.middleware.js';
+import { audit } from '../audit/audit.service.js';
 import { calculateInitialCommission } from '../commissions/commission.service.js';
 const saleSchema = z.object({
   leadId: z.string().cuid(),
@@ -28,6 +29,10 @@ salesRouter.post('/', async (req, res) => {
     const created = await tx.sale.create({ data: x });
     await tx.subscription.create({ data: { saleId: created.id, currentCents: x.amountCents } });
     return created;
+  });
+  await audit(res, 'CREATE', 'Sale', sale.id, {
+    leadId: sale.leadId,
+    amountCents: sale.amountCents
   });
   res.status(201).json({ sale });
 });
@@ -74,6 +79,10 @@ salesRouter.post('/:id/payments', async (req, res) => {
         data: { status: 'ACTIVE', startedAt: sale.subscription.startedAt ?? new Date() }
       });
     return p;
+  });
+  await audit(res, 'PAYMENT', 'Payment', payment.id, {
+    saleId: sale.id,
+    amountCents: payment.amountCents
   });
   res.status(201).json({ payment });
 });

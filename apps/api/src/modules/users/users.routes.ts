@@ -86,10 +86,8 @@ usersRouter.patch('/:id', async (request, response) => {
     });
     response.json({ user });
   } catch (error) {
-    response
-      .status(400)
-      .json({
-        message: error instanceof Error ? error.message : 'Não foi possível atualizar o usuário.'
-      });
+    response.status(400).json({
+      message: error instanceof Error ? error.message : 'Não foi possível atualizar o usuário.'
+    });
   }
 });

@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { z } from 'zod';
 import { prisma } from '../../lib/prisma.js';
 import { requireAuth } from '../auth/auth.middleware.js';
+import { audit } from '../audit/audit.service.js';
 
 const responseSchema = z.object({
   questionId: z.string().cuid(),
@@ -55,6 +56,9 @@ qualificationRouter.put('/:leadId/responses', async (request, response) => {
       where: { id: request.params.leadId },
       data: { score: Math.max(0, Math.min(100, score._sum.points ?? 0)) }
     });
+  });
+  await audit(response, 'QUALIFY', 'Lead', request.params.leadId as string, {
+    score: updated.score
   });
   response.json({ score: updated.score });
 });

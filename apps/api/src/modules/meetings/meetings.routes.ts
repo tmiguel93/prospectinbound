@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { z } from 'zod';
 import { prisma } from '../../lib/prisma.js';
 import { requireAuth } from '../auth/auth.middleware.js';
+import { audit } from '../audit/audit.service.js';
 const schema = z.object({
   leadId: z.string().cuid(),
   title: z.string().min(2),
@@ -34,9 +35,12 @@ meetingsRouter.post('/', async (req, res) => {
   });
   if (conflict)
     return res.status(409).json({ message: 'Conflito de horário detectado.', conflict });
-  res.status(201).json({
-    meeting: await prisma.meeting.create({
-      data: { ...x, startsAt, endsAt, link: x.link || null }
-    })
+  const meeting = await prisma.meeting.create({
+    data: { ...x, startsAt, endsAt, link: x.link || null }
   });
+  await audit(res, 'CREATE', 'Meeting', meeting.id, {
+    leadId: meeting.leadId,
+    startsAt: meeting.startsAt
+  });
+  res.status(201).json({ meeting });
 });

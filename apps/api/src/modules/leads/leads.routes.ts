@@ -2,6 +2,7 @@ import { Prisma } from '@prisma/client';
 import { Router } from 'express';
 import { prisma } from '../../lib/prisma.js';
 import { requireAuth } from '../auth/auth.middleware.js';
+import { audit } from '../audit/audit.service.js';
 import { activitySchema, leadSchema, moveSchema } from './leads.schemas.js';
 
 const includeLead = {
@@ -97,6 +98,7 @@ leadsRouter.post('/', async (request, response) => {
     },
     include: includeLead
   });
+  await audit(response, 'CREATE', 'Lead', lead.id, { establishmentName: lead.establishmentName });
   response.status(201).json({ lead, duplicates });
 });
 
@@ -119,6 +121,7 @@ leadsRouter.patch('/:id/move', async (request, response) => {
     });
     return tx.lead.update({ where: { id: current.id }, data: { stageId }, include: includeLead });
   });
+  await audit(response, 'MOVE', 'Lead', lead.id, { stageId });
   response.json({ lead });
 });
 
@@ -131,5 +134,6 @@ leadsRouter.post('/:id/activities', async (request, response) => {
     where: { id: request.params.id },
     data: { lastContactAt: new Date() }
   });
+  await audit(response, 'ACTIVITY', 'Lead', activity.leadId, { type: activity.type });
   response.status(201).json({ activity });
 });

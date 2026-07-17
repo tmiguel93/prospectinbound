@@ -151,14 +151,48 @@ export function UsersPage() {
 export function AuditPage() {
   const [logs, setLogs] = useState<Log[]>([]);
   const [error, setError] = useState('');
+  const [entity, setEntity] = useState('');
+  const [action, setAction] = useState('');
   useEffect(() => {
-    apiRequest<{ logs: Log[] }>('/api/audit')
+    const query = new URLSearchParams({
+      ...(entity ? { entity } : {}),
+      ...(action ? { action } : {})
+    });
+    apiRequest<{ logs: Log[] }>(`/api/audit?${query}`)
       .then((result) => setLogs(result.logs))
       .catch((cause) => setError(cause.message));
-  }, []);
+  }, [action, entity]);
   return (
     <section>
+      <p className="eyebrow text-cyan-700">Administração</p>
       <h1 className="text-2xl font-bold">Auditoria</h1>
+      <div className="mt-5 flex flex-wrap gap-3">
+        <select
+          className="field m-0 max-w-xs"
+          value={entity}
+          onChange={(event) => setEntity(event.target.value)}
+        >
+          <option value="">Todas as entidades</option>
+          <option>Lead</option>
+          <option>Meeting</option>
+          <option>User</option>
+          <option>Database</option>
+          <option>CommissionEntry</option>
+        </select>
+        <select
+          className="field m-0 max-w-xs"
+          value={action}
+          onChange={(event) => setAction(event.target.value)}
+        >
+          <option value="">Todas as ações</option>
+          <option>CREATE</option>
+          <option>UPDATE</option>
+          <option>MOVE</option>
+          <option>ACTIVITY</option>
+          <option>IMPORT</option>
+          <option>PAY</option>
+        </select>
+      </div>
       {error && <p className="mt-4 text-rose-700">{error}</p>}
       <div className="mt-6 rounded-xl border bg-white divide-y">
         {logs.map((log) => (
