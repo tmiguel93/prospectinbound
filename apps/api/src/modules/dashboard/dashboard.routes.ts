@@ -53,14 +53,29 @@ dashboardRouter.get('/summary', requireAuth, async (_request, response) => {
   });
 });
 
-dashboardRouter.get('/report', requireAuth, async (_request, response) => {
+dashboardRouter.get('/report', requireAuth, async (request, response) => {
+  const from =
+    typeof request.query.from === 'string' && !Number.isNaN(Date.parse(request.query.from))
+      ? new Date(`${request.query.from}T00:00:00`)
+      : undefined;
+  const to =
+    typeof request.query.to === 'string' && !Number.isNaN(Date.parse(request.query.to))
+      ? new Date(`${request.query.to}T23:59:59.999`)
+      : undefined;
+  if (from && to && from > to)
+    return response.status(400).json({ message: 'O período informado é inválido.' });
+  const period =
+    from || to ? { ...(from ? { gte: from } : {}), ...(to ? { lte: to } : {}) } : undefined;
   const [sales, commissions, subscriptions, leadsByStage] = await Promise.all([
     prisma.sale.aggregate({
       _sum: { amountCents: true },
       _count: true,
-      where: { status: { not: 'CANCELED' } }
+      where: { status: { not: 'CANCELED' }, ...(period ? { soldAt: period } : {}) }
     }),
-    prisma.commissionEntry.aggregate({ _sum: { amountCents: true } }),
+    prisma.commissionEntry.aggregate({
+      _sum: { amountCents: true },
+      ...(period ? { where: { createdAt: period } } : {})
+    }),
     prisma.subscription.groupBy({ by: ['status'], _count: true, _sum: { currentCents: true } }),
     prisma.pipelineStage.findMany({
       select: { name: true, _count: { select: { leads: { where: { status: 'ACTIVE' } } } } },
@@ -71,6 +86,7 @@ dashboardRouter.get('/report', requireAuth, async (_request, response) => {
     sales,
     commissions: commissions._sum.amountCents ?? 0,
     subscriptions,
+    period: { from: from?.toISOString() ?? null, to: to?.toISOString() ?? null },
     leadsByStage: leadsByStage.map((stage) => ({ name: stage.name, count: stage._count.leads }))
   });
 });

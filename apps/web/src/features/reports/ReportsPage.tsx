@@ -10,15 +10,50 @@ const money = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL
 export function ReportsPage() {
   const [report, setReport] = useState<Report>();
   const [error, setError] = useState('');
-  useEffect(() => {
-    apiRequest<Report>('/api/dashboard/report')
+  const [from, setFrom] = useState('');
+  const [to, setTo] = useState('');
+  const load = () => {
+    const query = new URLSearchParams({ ...(from ? { from } : {}), ...(to ? { to } : {}) });
+    apiRequest<Report>(`/api/dashboard/report?${query}`)
       .then(setReport)
       .catch((cause) => setError(cause.message));
+  };
+  useEffect(() => {
+    load();
   }, []);
   return (
     <section>
       <p className="eyebrow text-cyan-700">Análise</p>
       <h1 className="text-2xl font-bold">Relatórios</h1>
+      <form
+        className="mt-5 flex flex-wrap items-end gap-3"
+        onSubmit={(event) => {
+          event.preventDefault();
+          load();
+        }}
+      >
+        <label className="label">
+          De
+          <input
+            className="field"
+            type="date"
+            value={from}
+            onChange={(event) => setFrom(event.target.value)}
+          />
+        </label>
+        <label className="label">
+          Até
+          <input
+            className="field"
+            type="date"
+            value={to}
+            onChange={(event) => setTo(event.target.value)}
+          />
+        </label>
+        <button className="primary-button" type="submit">
+          Aplicar período
+        </button>
+      </form>
       {error && <p className="mt-4 text-rose-700">{error}</p>}
       {report && (
         <>

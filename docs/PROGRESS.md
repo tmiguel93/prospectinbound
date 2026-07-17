@@ -2,7 +2,7 @@
 
 ## Módulo atual
 
-Revisão pós-módulos concluída.
+Módulo 23 — Filtros por período em relatórios (concluído).
 
 ## Módulos concluídos
 
@@ -29,10 +29,11 @@ Revisão pós-módulos concluída.
 - Módulo 20 — Pipelines e assinaturas: telas operacionais conectadas aos dados locais.
 - Módulo 21 — Dashboard com dados reais e relatórios comerciais.
 - Módulo 22 — Revisão de contraste para tema claro/escuro e validação global.
+- Módulo 23 — Relatórios com filtro de período e validação de intervalo.
 
 ## Último commit
 
-`style: improve dark theme surface coverage`.
+`feat: add report date range filters`.
 
 ## Testes executados
 
@@ -48,7 +49,7 @@ As lacunas pós-MVP foram convertidas em módulos sequenciais e serão tratadas 
 
 ## Próximo módulo
 
-Sem pendências técnicas bloqueantes. Próxima evolução: testes E2E visuais e filtros avançados nos relatórios.
+Sem pendências técnicas bloqueantes. Próxima evolução: testes E2E visuais e exportação de relatórios.
 
 ## Decisões técnicas relevantes
 
