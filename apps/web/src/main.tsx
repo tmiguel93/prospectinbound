@@ -7,6 +7,7 @@ import { DashboardPage } from './features/dashboard/DashboardPage.js';
 import { ProductCatalogPage } from './features/catalog/ProductCatalogPage.js';
 import { LeadsPage } from './features/leads/LeadsPage.js';
 import { AgendaPage } from './features/agenda/AgendaPage.js';
+import { AuditPage, UsersPage } from './features/admin/AdminPage.js';
 import { apiRequest, type User } from './lib/api.js';
 import { ComingSoonPage } from './pages/ComingSoonPage.js';
 import './styles.css';
@@ -16,7 +17,6 @@ const placeholders = [
   'Vendas',
   'Assinaturas',
   'Comissões',
-  'Usuários',
   'Relatórios',
   'Configurações'
 ];
@@ -30,6 +30,8 @@ function AuthenticatedApp({ user, onLogout }: { user: User; onLogout: () => void
           <Route path="/parceiros-e-produtos" element={<ProductCatalogPage />} />
           <Route path="/leads" element={<LeadsPage />} />
           <Route path="/agenda" element={<AgendaPage />} />
+          <Route path="/usuarios" element={<UsersPage />} />
+          <Route path="/auditoria" element={<AuditPage />} />
           {placeholders.map((title) => (
             <Route
               key={title}

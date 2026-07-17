@@ -13,6 +13,7 @@ const navigation = [
   { to: '/comissoes', label: 'Comissões', icon: Menu },
   { to: '/parceiros-e-produtos', label: 'Parceiros e Produtos', icon: Menu },
   { to: '/usuarios', label: 'Usuários', icon: UsersRound },
+  { to: '/auditoria', label: 'Auditoria', icon: Menu },
   { to: '/relatorios', label: 'Relatórios', icon: Menu },
   { to: '/configuracoes', label: 'Configurações', icon: Settings }
 ];
