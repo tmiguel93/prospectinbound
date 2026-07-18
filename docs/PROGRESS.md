@@ -2,7 +2,7 @@
 
 ## Módulo atual
 
-Módulo 31 — Chat interno por lead e central de conversas (concluído).
+Módulo 32 — Integração contínua e testes independentes do banco local (concluído).
 
 ## Módulos concluídos
 
@@ -38,10 +38,11 @@ Módulo 31 — Chat interno por lead e central de conversas (concluído).
 - Módulo 29 — Stack Docker PostgreSQL, schema Prisma derivado e roteiro de migração segura do SQLite.
 - Módulo 30 — Webhook assinado, envio oficial pela Meta, status de entrega e histórico de mensagens por lead.
 - Módulo 31 — Chat interno persistente, central de conversas por lead e seletor seguro de canal WhatsApp.
+- Módulo 32 — CI no GitHub, auditoria de dependências e bootstrap do banco de testes em ambiente limpo.
 
 ## Último commit
 
-`feat: add internal lead conversations`.
+`ci: add automated quality workflow`.
 
 ## Testes executados
 
@@ -57,7 +58,7 @@ As lacunas pós-MVP foram convertidas em módulos sequenciais e serão tratadas 
 
 ## Próximo módulo
 
-Próxima evolução: automação de qualidade, CI e migrações PostgreSQL versionadas.
+Próxima evolução: migrações PostgreSQL versionadas e teste E2E visual.
 
 ## Decisões técnicas relevantes
 
