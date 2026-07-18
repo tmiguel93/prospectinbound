@@ -2,7 +2,7 @@
 
 ## Módulo atual
 
-Módulo 27 — Execução Docker com persistência e verificação de saúde (concluído).
+Módulo 28 — Endurecimento de segurança da API e dependências (concluído).
 
 ## Módulos concluídos
 
@@ -34,10 +34,11 @@ Módulo 27 — Execução Docker com persistência e verificação de saúde (co
 - Módulo 25 — Navegação visual agrupada, ícones e Kanban por produto com arrastar e soltar.
 - Módulo 26 — Limpeza de dados sintéticos, parceiro comercial completo e acesso direto ao Pipeline/Kanban.
 - Módulo 27 — Contêiner Docker da aplicação, volumes persistentes, usuário sem privilégios e healthcheck.
+- Módulo 28 — Helmet, CORS restrito em produção, limite de payload, segredo JWT robusto e dependências corrigidas.
 
 ## Último commit
 
-`chore: add dockerized local deployment`.
+`security: harden api defaults and dependencies`.
 
 ## Testes executados
 
@@ -53,7 +54,7 @@ As lacunas pós-MVP foram convertidas em módulos sequenciais e serão tratadas 
 
 ## Próximo módulo
 
-Próxima evolução: endurecimento de segurança e preparação da migração para PostgreSQL.
+Próxima evolução: base PostgreSQL e estratégia de migração dos dados locais.
 
 ## Decisões técnicas relevantes
 
