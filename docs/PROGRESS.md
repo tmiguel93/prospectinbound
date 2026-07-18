@@ -2,7 +2,7 @@
 
 ## Módulo atual
 
-Módulo 26 — Cadastro comercial completo e pipeline direto (concluído).
+Módulo 27 — Execução Docker com persistência e verificação de saúde (concluído).
 
 ## Módulos concluídos
 
@@ -33,10 +33,11 @@ Módulo 26 — Cadastro comercial completo e pipeline direto (concluído).
 - Módulo 24 — Suíte automatizada isolada da base local de operação.
 - Módulo 25 — Navegação visual agrupada, ícones e Kanban por produto com arrastar e soltar.
 - Módulo 26 — Limpeza de dados sintéticos, parceiro comercial completo e acesso direto ao Pipeline/Kanban.
+- Módulo 27 — Contêiner Docker da aplicação, volumes persistentes, usuário sem privilégios e healthcheck.
 
 ## Último commit
 
-`feat: add commercial partner details and streamline pipeline`.
+`chore: add dockerized local deployment`.
 
 ## Testes executados
 
@@ -52,7 +53,7 @@ As lacunas pós-MVP foram convertidas em módulos sequenciais e serão tratadas 
 
 ## Próximo módulo
 
-Sem pendências técnicas bloqueantes. Próxima evolução: testes E2E visuais e exportação de relatórios.
+Próxima evolução: endurecimento de segurança e preparação da migração para PostgreSQL.
 
 ## Decisões técnicas relevantes
 
@@ -60,3 +61,4 @@ Sem pendências técnicas bloqueantes. Próxima evolução: testes E2E visuais e
 - Valores financeiros usam centavos inteiros; percentuais usam pontos-base.
 - Tema claro/escuro é persistido em `localStorage`.
 - Bancos SQLite, backups e variáveis locais não são versionados.
+- A execução em Docker usa volumes nomeados para banco e backups, e não inclui arquivos `.env` na imagem.
