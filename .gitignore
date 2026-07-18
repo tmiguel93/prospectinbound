@@ -7,4 +7,4 @@ data/*.db
 data/*.db-*
 backups/*
 !backups/.gitkeep
-
+apps/api/postgres/schema.prisma

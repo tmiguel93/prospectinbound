@@ -21,7 +21,7 @@ ENV NODE_ENV=production
 RUN apk add --no-cache openssl su-exec
 COPY --from=build /app /app
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh && chown -R node:node /app
 
 EXPOSE 3000
 

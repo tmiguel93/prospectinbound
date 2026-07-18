@@ -10,6 +10,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "prisma:generate": "prisma generate --schema schema.prisma",
+    "prisma:postgres:generate": "node ../../scripts/prepare-postgres-schema.mjs && prisma generate --schema postgres/schema.prisma",
+    "prisma:postgres:push": "node ../../scripts/prepare-postgres-schema.mjs && prisma db push --schema postgres/schema.prisma",
     "prisma:migrate": "dotenv -e ../../.env -- prisma migrate deploy --schema schema.prisma",
     "prisma:studio": "dotenv -e ../../.env -- prisma studio --schema schema.prisma",
     "prisma:seed": "tsx prisma/seed.ts",

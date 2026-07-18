@@ -1,0 +1,55 @@
+services:
+  database:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-prospectinbound}
+      POSTGRES_USER: ${POSTGRES_USER:-prospectinbound}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Defina POSTGRES_PASSWORD no arquivo .env.postgres}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  crm:
+    build:
+      context: .
+    image: prospectinbound-crm:postgres-local
+    environment:
+      HOST: 0.0.0.0
+      PORT: 3000
+      DATABASE_URL: postgresql://${POSTGRES_USER:-prospectinbound}:${POSTGRES_PASSWORD}@database:5432/${POSTGRES_DB:-prospectinbound}?schema=public
+      JWT_SECRET: ${JWT_SECRET:?Defina JWT_SECRET com ao menos 32 caracteres no arquivo .env.postgres}
+    command:
+      [
+        'sh',
+        '-c',
+        'node scripts/prepare-postgres-schema.mjs && ./node_modules/.bin/prisma db push --schema apps/api/postgres/schema.prisma && npm run start'
+      ]
+    ports:
+      - '3002:3000'
+    volumes:
+      - postgres_backups:/app/backups
+    depends_on:
+      database:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "fetch('http://localhost:3000/health').then((response) => process.exit(response.ok ? 0 : 1)).catch(() => process.exit(1))"
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  postgres_data:
+  postgres_backups:

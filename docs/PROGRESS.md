@@ -2,7 +2,7 @@
 
 ## Módulo atual
 
-Módulo 28 — Endurecimento de segurança da API e dependências (concluído).
+Módulo 29 — Base PostgreSQL isolada e persistente (concluído).
 
 ## Módulos concluídos
 
@@ -35,10 +35,11 @@ Módulo 28 — Endurecimento de segurança da API e dependências (concluído).
 - Módulo 26 — Limpeza de dados sintéticos, parceiro comercial completo e acesso direto ao Pipeline/Kanban.
 - Módulo 27 — Contêiner Docker da aplicação, volumes persistentes, usuário sem privilégios e healthcheck.
 - Módulo 28 — Helmet, CORS restrito em produção, limite de payload, segredo JWT robusto e dependências corrigidas.
+- Módulo 29 — Stack Docker PostgreSQL, schema Prisma derivado e roteiro de migração segura do SQLite.
 
 ## Último commit
 
-`security: harden api defaults and dependencies`.
+`feat: add postgresql docker foundation`.
 
 ## Testes executados
 
@@ -54,7 +55,7 @@ As lacunas pós-MVP foram convertidas em módulos sequenciais e serão tratadas 
 
 ## Próximo módulo
 
-Próxima evolução: base PostgreSQL e estratégia de migração dos dados locais.
+Próxima evolução: mensageria oficial WhatsApp e chat interno por lead.
 
 ## Decisões técnicas relevantes
 
