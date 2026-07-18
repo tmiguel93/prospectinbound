@@ -2,7 +2,7 @@
 
 ## Módulo atual
 
-Módulo 32 — Integração contínua e testes independentes do banco local (concluído).
+Módulo 33 — Gateway reverso Nginx opcional (concluído).
 
 ## Módulos concluídos
 
@@ -39,10 +39,11 @@ Módulo 32 — Integração contínua e testes independentes do banco local (con
 - Módulo 30 — Webhook assinado, envio oficial pela Meta, status de entrega e histórico de mensagens por lead.
 - Módulo 31 — Chat interno persistente, central de conversas por lead e seletor seguro de canal WhatsApp.
 - Módulo 32 — CI no GitHub, auditoria de dependências e bootstrap do banco de testes em ambiente limpo.
+- Módulo 33 — Proxy reverso Nginx, cabeçalhos de borda e limite de payload na infraestrutura Docker.
 
 ## Último commit
 
-`ci: add automated quality workflow`.
+`infra: add optional nginx reverse proxy`.
 
 ## Testes executados
 

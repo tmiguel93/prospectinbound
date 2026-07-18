@@ -28,3 +28,13 @@ docker compose --env-file .env.docker down
 ```
 
 Não use `down -v` a menos que queira remover de forma definitiva o banco e os backups dos volumes `crm_data` e `crm_backups`.
+
+## Gateway reverso opcional
+
+Para expor o CRM por um gateway Nginx local, com cabeçalhos de borda e limite de corpo de 1 MB, execute:
+
+```powershell
+docker compose --env-file .env.docker -f compose.yaml -f compose.proxy.yaml up --build -d
+```
+
+O acesso pelo gateway será `http://localhost:8080`; a porta direta `3000` continua disponível para diagnóstico. Em produção, termine TLS no proxy ou balanceador da infraestrutura e mantenha `JWT_SECRET` privado.
