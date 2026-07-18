@@ -32,6 +32,7 @@ model User {
   leads        Lead[]
   meetings     Meeting[]
   auditLogs    AuditLog[]
+  sentMessages CommunicationMessage[]
 }
 
 model AuditLog {
@@ -173,6 +174,7 @@ model Lead {
   qualificationResponses LeadQualificationResponse[]
   meetings          Meeting[]
   sales             Sale[]
+  messages          CommunicationMessage[]
   createdAt         DateTime            @default(now())
   updatedAt         DateTime            @updatedAt
 }
@@ -295,4 +297,23 @@ model ProductQuestion {
   responses   LeadQualificationResponse[]
 
   @@unique([productId, position])
+}
+
+model CommunicationMessage {
+  id          String   @id @default(cuid())
+  leadId      String?
+  senderId    String?
+  channel     String
+  direction   String
+  contact     String?
+  content     String
+  status      String   @default("RECEIVED")
+  externalId  String?  @unique
+  metadata    String?
+  createdAt   DateTime @default(now())
+  lead        Lead?    @relation(fields: [leadId], references: [id], onDelete: SetNull)
+  sender      User?    @relation(fields: [senderId], references: [id], onDelete: SetNull)
+
+  @@index([leadId, createdAt])
+  @@index([channel, createdAt])
 }

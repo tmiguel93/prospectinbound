@@ -10,6 +10,11 @@ describe('GET /health', () => {
     expect(response.body).toEqual({ status: 'ok' });
     expect(response.headers['x-content-type-options']).toBe('nosniff');
   });
+
+  it('rejects unsigned WhatsApp webhook deliveries', async () => {
+    const response = await request(app).post('/api/whatsapp/webhook').send({ entry: [] });
+    expect(response.status).toBe(401);
+  });
 });
 
 describe('local authentication', () => {

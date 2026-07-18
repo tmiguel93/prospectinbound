@@ -15,7 +15,14 @@ const corsOrigins = (process.env.CORS_ORIGIN ?? '')
 export const env = {
   isProduction: process.env.NODE_ENV === 'production',
   jwtSecret: configuredJwtSecret || defaultDevelopmentSecret,
-  corsOrigins
+  corsOrigins,
+  whatsapp: {
+    accessToken: process.env.WHATSAPP_ACCESS_TOKEN?.trim(),
+    phoneNumberId: process.env.WHATSAPP_PHONE_NUMBER_ID?.trim(),
+    appSecret: process.env.WHATSAPP_APP_SECRET?.trim(),
+    verifyToken: process.env.WHATSAPP_VERIFY_TOKEN?.trim(),
+    apiVersion: process.env.WHATSAPP_API_VERSION?.trim()
+  }
 };
 
 if (

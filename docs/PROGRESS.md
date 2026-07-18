@@ -2,7 +2,7 @@
 
 ## Módulo atual
 
-Módulo 29 — Base PostgreSQL isolada e persistente (concluído).
+Módulo 30 — Integração oficial WhatsApp Cloud API (concluído).
 
 ## Módulos concluídos
 
@@ -36,10 +36,11 @@ Módulo 29 — Base PostgreSQL isolada e persistente (concluído).
 - Módulo 27 — Contêiner Docker da aplicação, volumes persistentes, usuário sem privilégios e healthcheck.
 - Módulo 28 — Helmet, CORS restrito em produção, limite de payload, segredo JWT robusto e dependências corrigidas.
 - Módulo 29 — Stack Docker PostgreSQL, schema Prisma derivado e roteiro de migração segura do SQLite.
+- Módulo 30 — Webhook assinado, envio oficial pela Meta, status de entrega e histórico de mensagens por lead.
 
 ## Último commit
 
-`feat: add postgresql docker foundation`.
+`feat: add official whatsapp cloud api integration`.
 
 ## Testes executados
 
@@ -55,7 +56,7 @@ As lacunas pós-MVP foram convertidas em módulos sequenciais e serão tratadas 
 
 ## Próximo módulo
 
-Próxima evolução: mensageria oficial WhatsApp e chat interno por lead.
+Próxima evolução: chat interno por lead com interface de atendimento.
 
 ## Decisões técnicas relevantes
 
