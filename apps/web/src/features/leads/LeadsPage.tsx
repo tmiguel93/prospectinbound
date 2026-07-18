@@ -1,6 +1,15 @@
-import { DndContext, useDraggable, useDroppable, type DragEndEvent } from '@dnd-kit/core';
+import {
+  DndContext,
+  KeyboardSensor,
+  PointerSensor,
+  useDraggable,
+  useDroppable,
+  useSensor,
+  useSensors,
+  type DragEndEvent
+} from '@dnd-kit/core';
 import { Plus, Search, Upload } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type CSSProperties } from 'react';
 import { useForm } from 'react-hook-form';
 import { apiRequest } from '../../lib/api.js';
 import { QualificationModal } from './QualificationModal.js';
@@ -11,6 +20,7 @@ type Catalog = {
   products: Array<{
     id: string;
     name: string;
+    segment: string;
     pipeline: { id: string; name: string; stages: Stage[] } | null;
   }>;
 };
@@ -49,7 +59,7 @@ function LeadCard({ lead, onQualify }: { lead: Lead; onQualify: () => void }) {
       ref={setNodeRef}
       {...listeners}
       {...attributes}
-      className="lead-card"
+      className={`lead-card priority-${lead.priority.toLowerCase()}`}
       onDoubleClick={onQualify}
       style={{
         transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined
@@ -79,10 +89,14 @@ function Column({
 }) {
   const { setNodeRef } = useDroppable({ id: stage.id });
   return (
-    <section className="kanban-column" ref={setNodeRef}>
-      <header style={{ borderColor: stage.color }}>
+    <section
+      className="kanban-column"
+      ref={setNodeRef}
+      style={{ '--stage-color': stage.color } as CSSProperties}
+    >
+      <header>
         <p className="font-semibold">{stage.name}</p>
-        <span>{leads.length}</span>
+        <span className="column-count">{leads.length}</span>
       </header>
       <div className="space-y-3">
         {leads.map((lead) => (
@@ -102,10 +116,16 @@ export function LeadsPage() {
   const [open, setOpen] = useState(false);
   const [importOpen, setImportOpen] = useState(false);
   const [error, setError] = useState<string>();
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
+    useSensor(KeyboardSensor)
+  );
   const { register, handleSubmit } = useForm<FormValues>({
     defaultValues: { source: 'Prospecção própria', priority: 'Normal' }
   });
   const selectedProduct = catalog?.products.find((product) => product.id === productId);
+  const selectableProducts =
+    catalog?.products.filter((product) => product.pipeline && !/^teste/i.test(product.segment)) ?? [];
   const stages = selectedProduct?.pipeline?.stages ?? [];
   const load = () =>
     apiRequest<Lead[]>(
@@ -115,7 +135,12 @@ export function LeadsPage() {
       .catch(() => setError('Não foi possível carregar leads.'));
   useEffect(() => {
     apiRequest<Catalog>('/api/catalog/overview')
-      .then(setCatalog)
+      .then((data) => {
+        setCatalog(data);
+        setProductId(
+          (current) => current || data.products.find((product) => product.pipeline && !/^teste/i.test(product.segment))?.id || ''
+        );
+      })
       .catch(() => setError('Não foi possível carregar produtos.'));
   }, []);
   useEffect(() => {
@@ -178,18 +203,21 @@ export function LeadsPage() {
         </div>
       </div>
       <div className="mb-5 flex flex-wrap gap-3">
-        <select
-          className="field max-w-xs"
-          value={productId}
-          onChange={(event) => setProductId(event.target.value)}
-        >
-          <option value="">Selecione um produto</option>
-          {catalog?.products.map((product) => (
-            <option key={product.id} value={product.id}>
-              {product.name}
-            </option>
-          ))}
-        </select>
+        <label className="product-picker">
+          Produto ativo no Kanban
+          <select
+            className="field"
+            value={productId}
+            onChange={(event) => setProductId(event.target.value)}
+          >
+            <option value="">Selecione um produto</option>
+            {selectableProducts.map((product) => (
+                <option key={product.id} value={product.id}>
+                  {product.name}
+                </option>
+              ))}
+          </select>
+        </label>
         <label className="relative block">
           <Search className="absolute left-3 top-3 text-slate-400" size={16} />
           <input
@@ -207,7 +235,7 @@ export function LeadsPage() {
         </p>
       )}
       {productId && (
-        <DndContext onDragEnd={move}>
+        <DndContext sensors={sensors} onDragEnd={(event) => void move(event)}>
           <div className="kanban-board">
             {stages.map((stage) => (
               <Column

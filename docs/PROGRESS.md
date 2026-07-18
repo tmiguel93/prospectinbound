@@ -2,7 +2,7 @@
 
 ## Módulo atual
 
-Módulo 24 — Isolamento seguro da suíte de testes (concluído).
+Módulo 25 — Experiência visual e Kanban operacional (concluído).
 
 ## Módulos concluídos
 
@@ -31,10 +31,11 @@ Módulo 24 — Isolamento seguro da suíte de testes (concluído).
 - Módulo 22 — Revisão de contraste para tema claro/escuro e validação global.
 - Módulo 23 — Relatórios com filtro de período e validação de intervalo.
 - Módulo 24 — Suíte automatizada isolada da base local de operação.
+- Módulo 25 — Navegação visual agrupada, ícones e Kanban por produto com arrastar e soltar.
 
 ## Último commit
 
-`test: isolate automated tests from local database`.
+`feat: improve visual navigation and Kanban experience`.
 
 ## Testes executados
 

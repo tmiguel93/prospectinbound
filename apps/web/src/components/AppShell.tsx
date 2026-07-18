@@ -1,21 +1,50 @@
-import { LayoutDashboard, LogOut, Menu, Moon, Settings, Sun, UsersRound } from 'lucide-react';
+import {
+  BadgeDollarSign,
+  CalendarDays,
+  ChartNoAxesCombined,
+  ClipboardList,
+  ContactRound,
+  LayoutDashboard,
+  LogOut,
+  Menu,
+  Moon,
+  Package,
+  Settings,
+  Sun,
+  UsersRound
+} from 'lucide-react';
 import { useState, type ReactNode } from 'react';
 import { NavLink } from 'react-router-dom';
 import type { User } from '../lib/api.js';
 
 const navigation = [
-  { to: '/', label: 'Dashboard', icon: LayoutDashboard },
-  { to: '/pipelines', label: 'Pipelines', icon: Menu },
-  { to: '/agenda', label: 'Agenda', icon: Menu },
-  { to: '/leads', label: 'Leads', icon: UsersRound },
-  { to: '/vendas', label: 'Vendas', icon: Menu },
-  { to: '/assinaturas', label: 'Assinaturas', icon: Menu },
-  { to: '/comissoes', label: 'Comissões', icon: Menu },
-  { to: '/parceiros-e-produtos', label: 'Parceiros e Produtos', icon: Menu },
-  { to: '/usuarios', label: 'Usuários', icon: UsersRound },
-  { to: '/auditoria', label: 'Auditoria', icon: Menu },
-  { to: '/relatorios', label: 'Relatórios', icon: Menu },
-  { to: '/configuracoes', label: 'Configurações', icon: Settings }
+  {
+    group: 'Visão geral',
+    items: [
+      { to: '/', label: 'Dashboard', icon: LayoutDashboard },
+      { to: '/agenda', label: 'Agenda', icon: CalendarDays }
+    ]
+  },
+  {
+    group: 'Operação comercial',
+    items: [
+      { to: '/leads', label: 'Leads e Kanban', icon: ContactRound },
+      { to: '/pipelines', label: 'Pipelines', icon: ClipboardList },
+      { to: '/vendas', label: 'Vendas', icon: BadgeDollarSign },
+      { to: '/assinaturas', label: 'Assinaturas', icon: Package },
+      { to: '/comissoes', label: 'Comissões', icon: BadgeDollarSign }
+    ]
+  },
+  {
+    group: 'Administração',
+    items: [
+      { to: '/parceiros-e-produtos', label: 'Catálogo', icon: Package },
+      { to: '/usuarios', label: 'Usuários', icon: UsersRound },
+      { to: '/auditoria', label: 'Auditoria', icon: ClipboardList },
+      { to: '/relatorios', label: 'Relatórios', icon: ChartNoAxesCombined },
+      { to: '/configuracoes', label: 'Configurações', icon: Settings }
+    ]
+  }
 ];
 
 export function AppShell({
@@ -41,22 +70,32 @@ export function AppShell({
   return (
     <div className="min-h-screen bg-slate-100 text-slate-900">
       <aside className={`sidebar ${mobileOpen ? 'sidebar-open' : ''}`}>
-        <div className="mb-8 px-3">
-          <p className="eyebrow">ProspectInbound</p>
-          <p className="font-semibold text-white">CRM local</p>
+        <div className="brand-lockup">
+          <span className="brand-mark">P</span>
+          <div>
+            <p className="brand-name">ProspectInbound</p>
+            <p className="brand-subtitle">CRM local</p>
+          </div>
         </div>
-        <nav className="space-y-1">
-          {navigation.map(({ to, label, icon: Icon }) => (
-            <NavLink
-              key={to}
-              to={to}
-              end={to === '/'}
-              onClick={() => setMobileOpen(false)}
-              className={({ isActive }) => `nav-item ${isActive ? 'nav-item-active' : ''}`}
-            >
-              <Icon size={18} />
-              {label}
-            </NavLink>
+        <nav className="space-y-6">
+          {navigation.map((section) => (
+            <div key={section.group}>
+              <p className="nav-group-label">{section.group}</p>
+              <div className="mt-2 space-y-1">
+                {section.items.map(({ to, label, icon: Icon }) => (
+                  <NavLink
+                    key={to}
+                    to={to}
+                    end={to === '/'}
+                    onClick={() => setMobileOpen(false)}
+                    className={({ isActive }) => `nav-item ${isActive ? 'nav-item-active' : ''}`}
+                  >
+                    <Icon size={17} strokeWidth={2.2} />
+                    <span>{label}</span>
+                  </NavLink>
+                ))}
+              </div>
+            </div>
           ))}
         </nav>
       </aside>
