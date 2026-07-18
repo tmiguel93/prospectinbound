@@ -7,6 +7,7 @@ import {
   LayoutDashboard,
   LogOut,
   Menu,
+  MessageCircle,
   Moon,
   Package,
   Settings,
@@ -29,6 +30,7 @@ const navigation = [
     group: 'Operação comercial',
     items: [
       { to: '/leads', label: 'Pipeline e Kanban', icon: ContactRound },
+      { to: '/conversas', label: 'Conversas', icon: MessageCircle },
       { to: '/vendas', label: 'Vendas', icon: BadgeDollarSign },
       { to: '/assinaturas', label: 'Assinaturas', icon: Package },
       { to: '/comissoes', label: 'Comissões', icon: BadgeDollarSign }

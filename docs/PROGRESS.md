@@ -2,7 +2,7 @@
 
 ## Módulo atual
 
-Módulo 30 — Integração oficial WhatsApp Cloud API (concluído).
+Módulo 31 — Chat interno por lead e central de conversas (concluído).
 
 ## Módulos concluídos
 
@@ -37,10 +37,11 @@ Módulo 30 — Integração oficial WhatsApp Cloud API (concluído).
 - Módulo 28 — Helmet, CORS restrito em produção, limite de payload, segredo JWT robusto e dependências corrigidas.
 - Módulo 29 — Stack Docker PostgreSQL, schema Prisma derivado e roteiro de migração segura do SQLite.
 - Módulo 30 — Webhook assinado, envio oficial pela Meta, status de entrega e histórico de mensagens por lead.
+- Módulo 31 — Chat interno persistente, central de conversas por lead e seletor seguro de canal WhatsApp.
 
 ## Último commit
 
-`feat: add official whatsapp cloud api integration`.
+`feat: add internal lead conversations`.
 
 ## Testes executados
 
@@ -56,7 +57,7 @@ As lacunas pós-MVP foram convertidas em módulos sequenciais e serão tratadas 
 
 ## Próximo módulo
 
-Próxima evolução: chat interno por lead com interface de atendimento.
+Próxima evolução: automação de qualidade, CI e migrações PostgreSQL versionadas.
 
 ## Decisões técnicas relevantes
 

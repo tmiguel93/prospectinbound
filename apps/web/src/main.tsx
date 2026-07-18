@@ -13,6 +13,7 @@ import { CommissionsPage } from './features/commissions/CommissionsPage.js';
 import { SettingsPage } from './features/settings/SettingsPage.js';
 import { SubscriptionsPage } from './features/operations/OperationsPages.js';
 import { ReportsPage } from './features/reports/ReportsPage.js';
+import { ConversationsPage } from './features/communications/ConversationsPage.js';
 import { apiRequest, type User } from './lib/api.js';
 import { ComingSoonPage } from './pages/ComingSoonPage.js';
 import './styles.css';
@@ -27,6 +28,7 @@ function AuthenticatedApp({ user, onLogout }: { user: User; onLogout: () => void
           <Route path="/" element={<DashboardPage />} />
           <Route path="/parceiros-e-produtos" element={<ProductCatalogPage />} />
           <Route path="/leads" element={<LeadsPage />} />
+          <Route path="/conversas" element={<ConversationsPage />} />
           <Route path="/agenda" element={<AgendaPage />} />
           <Route path="/usuarios" element={<UsersPage />} />
           <Route path="/vendas" element={<SalesPage />} />

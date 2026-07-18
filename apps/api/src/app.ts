@@ -18,6 +18,7 @@ import { backupRouter } from './modules/backup/backup.routes.js';
 import { importsRouter } from './modules/imports/imports.routes.js';
 import { commissionsRouter } from './modules/commissions/commissions.routes.js';
 import { whatsappRouter } from './modules/whatsapp/whatsapp.routes.js';
+import { communicationsRouter } from './modules/communications/communications.routes.js';
 import { errorHandler } from './shared/error-handler.js';
 
 export const app = express();
@@ -58,4 +59,5 @@ app.use('/api/backups', backupRouter);
 app.use('/api/imports', importsRouter);
 app.use('/api/commissions', commissionsRouter);
 app.use('/api/whatsapp', whatsappRouter);
+app.use('/api/communications', communicationsRouter);
 app.use(errorHandler);
