@@ -50,6 +50,13 @@ model AuditLog {
 model Partner {
   id        String    @id @default(cuid())
   name      String    @unique
+  taxId     String?
+  representativeName String?
+  phone     String?
+  email     String?
+  operationMode String?
+  commissionModel String?
+  recurringRateBps Int?
   notes     String?
   active    Boolean   @default(true)
   products  Product[]

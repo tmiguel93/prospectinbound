@@ -2,7 +2,7 @@
 
 ## Módulo atual
 
-Módulo 25 — Experiência visual e Kanban operacional (concluído).
+Módulo 26 — Cadastro comercial completo e pipeline direto (concluído).
 
 ## Módulos concluídos
 
@@ -32,10 +32,11 @@ Módulo 25 — Experiência visual e Kanban operacional (concluído).
 - Módulo 23 — Relatórios com filtro de período e validação de intervalo.
 - Módulo 24 — Suíte automatizada isolada da base local de operação.
 - Módulo 25 — Navegação visual agrupada, ícones e Kanban por produto com arrastar e soltar.
+- Módulo 26 — Limpeza de dados sintéticos, parceiro comercial completo e acesso direto ao Pipeline/Kanban.
 
 ## Último commit
 
-`feat: improve visual navigation and Kanban experience`.
+`feat: add commercial partner details and streamline pipeline`.
 
 ## Testes executados
 

@@ -125,7 +125,8 @@ export function LeadsPage() {
   });
   const selectedProduct = catalog?.products.find((product) => product.id === productId);
   const selectableProducts =
-    catalog?.products.filter((product) => product.pipeline && !/^teste/i.test(product.segment)) ?? [];
+    catalog?.products.filter((product) => product.pipeline && !/^teste/i.test(product.segment)) ??
+    [];
   const stages = selectedProduct?.pipeline?.stages ?? [];
   const load = () =>
     apiRequest<Lead[]>(
@@ -138,7 +139,11 @@ export function LeadsPage() {
       .then((data) => {
         setCatalog(data);
         setProductId(
-          (current) => current || data.products.find((product) => product.pipeline && !/^teste/i.test(product.segment))?.id || ''
+          (current) =>
+            current ||
+            data.products.find((product) => product.pipeline && !/^teste/i.test(product.segment))
+              ?.id ||
+            ''
         );
       })
       .catch(() => setError('Não foi possível carregar produtos.'));
@@ -202,7 +207,7 @@ export function LeadsPage() {
           </button>
         </div>
       </div>
-      <div className="mb-5 flex flex-wrap gap-3">
+      <div className="kanban-toolbar">
         <label className="product-picker">
           Produto ativo no Kanban
           <select
@@ -212,13 +217,13 @@ export function LeadsPage() {
           >
             <option value="">Selecione um produto</option>
             {selectableProducts.map((product) => (
-                <option key={product.id} value={product.id}>
-                  {product.name}
-                </option>
-              ))}
+              <option key={product.id} value={product.id}>
+                {product.name}
+              </option>
+            ))}
           </select>
         </label>
-        <label className="relative block">
+        <label className="search-field relative block">
           <Search className="absolute left-3 top-3 text-slate-400" size={16} />
           <input
             className="field pl-9"

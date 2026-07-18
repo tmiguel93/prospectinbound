@@ -11,7 +11,7 @@ import { AuditPage, UsersPage } from './features/admin/AdminPage.js';
 import { SalesPage } from './features/sales/SalesPage.js';
 import { CommissionsPage } from './features/commissions/CommissionsPage.js';
 import { SettingsPage } from './features/settings/SettingsPage.js';
-import { PipelinesPage, SubscriptionsPage } from './features/operations/OperationsPages.js';
+import { SubscriptionsPage } from './features/operations/OperationsPages.js';
 import { ReportsPage } from './features/reports/ReportsPage.js';
 import { apiRequest, type User } from './lib/api.js';
 import { ComingSoonPage } from './pages/ComingSoonPage.js';
@@ -30,7 +30,7 @@ function AuthenticatedApp({ user, onLogout }: { user: User; onLogout: () => void
           <Route path="/agenda" element={<AgendaPage />} />
           <Route path="/usuarios" element={<UsersPage />} />
           <Route path="/vendas" element={<SalesPage />} />
-          <Route path="/pipelines" element={<PipelinesPage />} />
+          <Route path="/pipelines" element={<Navigate to="/leads" replace />} />
           <Route path="/assinaturas" element={<SubscriptionsPage />} />
           <Route path="/relatorios" element={<ReportsPage />} />
           <Route path="/comissoes" element={<CommissionsPage />} />

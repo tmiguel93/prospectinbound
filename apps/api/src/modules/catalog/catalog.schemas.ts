@@ -32,11 +32,21 @@ const planSchema = z.object({
   description: z.string().trim().max(1000).optional(),
   active: z.boolean().default(true)
 });
+const partnerDetailsSchema = z.object({
+  taxId: z.string().trim().max(18).optional(),
+  representativeName: z.string().trim().max(120).optional(),
+  phone: z.string().trim().max(30).optional(),
+  email: z.string().trim().email().optional().or(z.literal('')),
+  operationMode: z.string().trim().max(120).optional(),
+  commissionModel: z.string().trim().max(120).optional(),
+  recurringRateBps: z.number().int().min(0).max(10000).optional()
+});
 
 export const wizardSchema = z
   .object({
     partnerId: z.string().cuid().optional(),
     partnerName: z.string().trim().min(2).max(120).optional(),
+    partnerDetails: partnerDetailsSchema.default({}),
     product: z.object({
       name: z.string().trim().min(2).max(120),
       segment: z.string().trim().min(2).max(120),
@@ -74,7 +84,7 @@ export const wizardSchema = z
       context.addIssue({ code: z.ZodIssueCode.custom, message: 'Selecione ou crie um pipeline.' });
   });
 
-export const partnerSchema = z.object({
+export const partnerSchema = partnerDetailsSchema.extend({
   name: z.string().trim().min(2).max(120),
   notes: z.string().trim().max(2000).optional()
 });

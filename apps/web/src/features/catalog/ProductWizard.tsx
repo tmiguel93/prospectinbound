@@ -8,6 +8,12 @@ type Partner = { id: string; name: string };
 type FormValues = {
   partnerId: string;
   partnerName: string;
+  taxId: string;
+  representativeName: string;
+  partnerPhone: string;
+  partnerEmail: string;
+  operationMode: string;
+  commissionModel: string;
   productName: string;
   segment: string;
   description: string;
@@ -62,6 +68,12 @@ export function ProductWizard({
     defaultValues: {
       partnerId: '',
       partnerName: '',
+      taxId: '',
+      representativeName: '',
+      partnerPhone: '',
+      partnerEmail: '',
+      operationMode: 'Venda direta',
+      commissionModel: 'Ativação + recorrência',
       productName: '',
       segment: '',
       description: '',
@@ -100,6 +112,15 @@ export function ProductWizard({
         body: JSON.stringify({
           partnerId: data.partnerId || undefined,
           partnerName: data.partnerName || undefined,
+          partnerDetails: {
+            taxId: data.taxId || undefined,
+            representativeName: data.representativeName || undefined,
+            phone: data.partnerPhone || undefined,
+            email: data.partnerEmail || undefined,
+            operationMode: data.operationMode || undefined,
+            commissionModel: data.commissionModel || undefined,
+            recurringRateBps: Math.round(Number(data.recurringCommission) * 100)
+          },
           product: {
             name: data.productName,
             segment: data.segment,
@@ -171,6 +192,67 @@ export function ProductWizard({
           disabled={Boolean(values.partnerId)}
           {...register('partnerName')}
         />
+      </label>
+      <label className="label">
+        CNPJ ou CPF
+        <input
+          className="field"
+          disabled={Boolean(values.partnerId)}
+          placeholder="Somente números"
+          {...register('taxId')}
+        />
+      </label>
+      <label className="label">
+        Representante ou titular
+        <input
+          className="field"
+          disabled={Boolean(values.partnerId)}
+          {...register('representativeName')}
+        />
+      </label>
+      <label className="label">
+        Telefone de contato
+        <input
+          className="field"
+          disabled={Boolean(values.partnerId)}
+          {...register('partnerPhone')}
+        />
+      </label>
+      <label className="label">
+        E-mail comercial
+        <input
+          className="field"
+          disabled={Boolean(values.partnerId)}
+          type="email"
+          {...register('partnerEmail')}
+        />
+      </label>
+      <label className="label">
+        Forma de atuação
+        <select
+          className="field"
+          disabled={Boolean(values.partnerId)}
+          {...register('operationMode')}
+        >
+          <option>Venda direta</option>
+          <option>Indicação</option>
+          <option>Revenda</option>
+          <option>Afiliado</option>
+          <option>Parceria estratégica</option>
+        </select>
+      </label>
+      <label className="label">
+        Forma de comissionamento
+        <select
+          className="field"
+          disabled={Boolean(values.partnerId)}
+          {...register('commissionModel')}
+        >
+          <option>Ativação + recorrência</option>
+          <option>Somente ativação</option>
+          <option>Somente recorrência</option>
+          <option>Comissão fixa</option>
+        </select>
       </label>
     </div>,
     <div className="wizard-grid" key="product">

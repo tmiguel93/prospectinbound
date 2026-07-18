@@ -346,6 +346,22 @@ body {
   letter-spacing: normal;
   text-transform: none;
 }
+.kanban-toolbar {
+  display: grid;
+  grid-template-columns: minmax(16rem, 20rem) minmax(16rem, 22rem);
+  align-items: end;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+.search-field .field {
+  height: 3rem;
+  margin-top: 0;
+}
+@media (max-width: 640px) {
+  .kanban-toolbar {
+    grid-template-columns: 1fr;
+  }
+}
 @media (min-width: 1024px) {
   .sidebar {
     transform: translateX(0);

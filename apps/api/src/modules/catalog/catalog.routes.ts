@@ -22,8 +22,8 @@ async function createWizard(input: WizardInput) {
       ? await transaction.partner.findUniqueOrThrow({ where: { id: input.partnerId } })
       : await transaction.partner.upsert({
           where: { name: input.partnerName! },
-          update: {},
-          create: { name: input.partnerName! }
+          update: input.partnerDetails,
+          create: { name: input.partnerName!, ...input.partnerDetails }
         });
     const pipeline = input.pipelineId
       ? await transaction.pipeline.findUniqueOrThrow({ where: { id: input.pipelineId } })
