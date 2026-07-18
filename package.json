@@ -15,7 +15,7 @@
     "format": "prettier . --write",
     "format:check": "prettier . --check",
     "typecheck": "npm run typecheck -w @prospectinbound/shared && npm run typecheck -w @prospectinbound/api && npm run typecheck -w @prospectinbound/web",
-    "test": "npm run db:migrate && npm run build -w @prospectinbound/shared && vitest run",
+    "test": "node ./scripts/prepare-test-db.mjs && dotenv -e .env.test -- npm run build -w @prospectinbound/shared && dotenv -e .env.test -- vitest run",
     "test:api": "npm run test -w @prospectinbound/api",
     "test:web": "npm run test -w @prospectinbound/web",
     "db:migrate": "npm run prisma:migrate -w @prospectinbound/api",

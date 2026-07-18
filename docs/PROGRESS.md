@@ -2,7 +2,7 @@
 
 ## Módulo atual
 
-Módulo 23 — Filtros por período em relatórios (concluído).
+Módulo 24 — Isolamento seguro da suíte de testes (concluído).
 
 ## Módulos concluídos
 
@@ -30,10 +30,11 @@ Módulo 23 — Filtros por período em relatórios (concluído).
 - Módulo 21 — Dashboard com dados reais e relatórios comerciais.
 - Módulo 22 — Revisão de contraste para tema claro/escuro e validação global.
 - Módulo 23 — Relatórios com filtro de período e validação de intervalo.
+- Módulo 24 — Suíte automatizada isolada da base local de operação.
 
 ## Último commit
 
-`feat: add report date range filters`.
+`test: isolate automated tests from local database`.
 
 ## Testes executados
 
