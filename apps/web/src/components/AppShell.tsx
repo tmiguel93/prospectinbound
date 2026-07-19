@@ -19,6 +19,7 @@ import {
 import { useEffect, useState, type ReactNode } from 'react';
 import { NavLink } from 'react-router-dom';
 import type { User } from '../lib/api.js';
+import { MachadoMark } from './MachadoMark.js';
 
 const navigation = [
   {
@@ -110,7 +111,9 @@ export function AppShell({
         className={`sidebar ${mobileOpen ? 'sidebar-open' : ''} ${sidebarCollapsed ? 'sidebar-collapsed' : ''}`}
       >
         <div className="brand-lockup">
-          <span className="brand-mark">P</span>
+          <span className="brand-mark">
+            <MachadoMark />
+          </span>
           <div className="brand-copy">
             <p className="brand-name">ProspectInbound</p>
             <p className="brand-subtitle">CRM local</p>

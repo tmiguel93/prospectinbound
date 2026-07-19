@@ -79,8 +79,8 @@ export function SettingsPage() {
       </div>
       {error && <p className="mt-4 rounded-lg bg-rose-50 p-3 text-sm text-rose-700">{error}</p>}
       {notice && <p className="mt-4 rounded-lg bg-cyan-50 p-3 text-sm text-cyan-900">{notice}</p>}
-      <div className="mt-6 overflow-hidden rounded-xl border border-slate-200 bg-white">
-        <table className="min-w-full divide-y divide-slate-200 text-sm">
+      <div className="mt-6 overflow-x-auto rounded-xl border border-slate-200 bg-white">
+        <table className="min-w-[42rem] divide-y divide-slate-200 text-sm">
           <thead className="bg-slate-50 text-left text-xs uppercase text-slate-500">
             <tr>
               <th className="px-4 py-3">Arquivo</th>

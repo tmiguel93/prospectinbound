@@ -2,7 +2,7 @@
 
 ## Módulo atual
 
-Módulo 35 — Resultado de lead no Kanban (concluído).
+Módulo 36 — Identidade visual e responsividade operacional (concluído).
 
 ## Módulos concluídos
 
@@ -42,10 +42,11 @@ Módulo 35 — Resultado de lead no Kanban (concluído).
 - Módulo 33 — Proxy reverso Nginx, cabeçalhos de borda e limite de payload na infraestrutura Docker.
 - Módulo 34 — Layout responsivo, menu lateral retrátil persistente, navegação móvel com sobreposição e ajustes da central de conversas.
 - Módulo 35 — Ações flutuantes de ganho/perda no Kanban, reversão segura e auditoria do resultado sem alterar a etapa do lead.
+- Módulo 36 — Marca vetorial de machado minimalista, modais móveis aprimorados e tabelas operacionais com rolagem horizontal responsiva.
 
 ## Último commit
 
-`feat: add lead outcomes from kanban`.
+`feat: add minimal axe brand mark and mobile refinements`.
 
 ## Testes executados
 

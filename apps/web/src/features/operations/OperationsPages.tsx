@@ -68,8 +68,8 @@ export function SubscriptionsPage() {
       <p className="eyebrow text-cyan-700">Comercial</p>
       <h1 className="text-2xl font-bold">Assinaturas</h1>
       {error && <p className="mt-4 text-rose-700">{error}</p>}
-      <div className="mt-6 overflow-hidden rounded-xl border bg-white">
-        <table className="min-w-full divide-y text-left text-sm">
+      <div className="mt-6 overflow-x-auto rounded-xl border bg-white">
+        <table className="min-w-[42rem] divide-y text-left text-sm">
           <thead className="bg-slate-50 text-xs uppercase text-slate-500">
             <tr>
               <th className="px-4 py-3">Cliente</th>
