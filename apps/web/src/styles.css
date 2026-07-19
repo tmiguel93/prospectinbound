@@ -121,7 +121,40 @@ body {
   background: linear-gradient(180deg, #0f172a 0%, #111827 100%);
   padding: 1.25rem 0.75rem;
   transform: translateX(-100%);
-  transition: transform 160ms ease;
+  transition:
+    transform 160ms ease,
+    width 180ms ease;
+}
+.sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  border: 0;
+  background: rgb(15 23 42 / 0.48);
+  backdrop-filter: blur(2px);
+}
+.sidebar-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.625rem;
+  padding: 0.5rem;
+  color: #475569;
+}
+.sidebar-toggle:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+:root[data-theme='dark'] .sidebar-toggle {
+  color: #cbd5e1;
+}
+:root[data-theme='dark'] .sidebar-toggle:hover {
+  background: #1e293b;
+  color: #f8fafc;
+}
+.app-content {
+  min-width: 0;
+  transition: padding-left 180ms ease;
 }
 .brand-lockup {
   display: flex;
@@ -366,6 +399,28 @@ body {
   .sidebar {
     transform: translateX(0);
   }
+  .app-content {
+    padding-left: 16rem;
+  }
+  .sidebar-collapsed {
+    width: 5rem;
+  }
+  .sidebar-collapsed .brand-lockup {
+    justify-content: center;
+    margin-inline: 0;
+  }
+  .sidebar-collapsed .brand-copy,
+  .sidebar-collapsed .nav-group-label,
+  .sidebar-collapsed .nav-item span {
+    display: none;
+  }
+  .sidebar-collapsed .nav-item {
+    justify-content: center;
+    padding-inline: 0.75rem;
+  }
+  .app-content-collapsed {
+    padding-left: 5rem;
+  }
 }
 
 .conversation-layout {
@@ -533,5 +588,44 @@ body {
   .conversation-leads {
     max-height: 12rem;
     overflow: auto;
+  }
+}
+@media (max-width: 640px) {
+  .app-header {
+    gap: 0.5rem;
+    padding-inline: 1rem;
+  }
+  .conversation-header {
+    align-items: flex-start;
+    padding: 0.875rem 1rem;
+  }
+  .conversation-header .badge {
+    max-width: 9rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .message-feed {
+    min-height: 18rem;
+    max-height: 22rem;
+    padding: 0.875rem;
+  }
+  .message-bubble {
+    max-width: 94%;
+  }
+  .conversation-composer {
+    grid-template-columns: 1fr;
+    padding: 0.875rem 1rem;
+  }
+  .conversation-composer .primary-button {
+    width: 100%;
+    justify-content: center;
+  }
+  .channel-switch {
+    overflow-x: auto;
+    padding-bottom: 0.15rem;
+  }
+  .channel-switch button {
+    white-space: nowrap;
   }
 }

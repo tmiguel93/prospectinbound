@@ -2,7 +2,7 @@
 
 ## Módulo atual
 
-Módulo 33 — Gateway reverso Nginx opcional (concluído).
+Módulo 34 — Navegação adaptável e lateral retrátil (concluído).
 
 ## Módulos concluídos
 
@@ -40,17 +40,18 @@ Módulo 33 — Gateway reverso Nginx opcional (concluído).
 - Módulo 31 — Chat interno persistente, central de conversas por lead e seletor seguro de canal WhatsApp.
 - Módulo 32 — CI no GitHub, auditoria de dependências e bootstrap do banco de testes em ambiente limpo.
 - Módulo 33 — Proxy reverso Nginx, cabeçalhos de borda e limite de payload na infraestrutura Docker.
+- Módulo 34 — Layout responsivo, menu lateral retrátil persistente, navegação móvel com sobreposição e ajustes da central de conversas.
 
 ## Último commit
 
-`infra: add optional nginx reverse proxy`.
+`feat: make navigation responsive and collapsible`.
 
 ## Testes executados
 
-- `npm run format:check`
-- `npm run lint`
+- `npx prettier --check` nos arquivos do módulo
+- `npx eslint apps packages scripts --max-warnings=0`
 - `npm run typecheck`
-- `npm run test` — 8 testes aprovados.
+- `npm run test` — 9 testes aprovados.
 - `npm run build`
 
 ## Pendências conhecidas
