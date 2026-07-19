@@ -3,7 +3,7 @@ import { Router } from 'express';
 import { prisma } from '../../lib/prisma.js';
 import { requireAuth } from '../auth/auth.middleware.js';
 import { audit } from '../audit/audit.service.js';
-import { activitySchema, leadSchema, moveSchema } from './leads.schemas.js';
+import { activitySchema, leadSchema, moveSchema, outcomeSchema } from './leads.schemas.js';
 
 const includeLead = {
   product: true,
@@ -122,6 +122,17 @@ leadsRouter.patch('/:id/move', async (request, response) => {
     return tx.lead.update({ where: { id: current.id }, data: { stageId }, include: includeLead });
   });
   await audit(response, 'MOVE', 'Lead', lead.id, { stageId });
+  response.json({ lead });
+});
+
+leadsRouter.patch('/:id/outcome', async (request, response) => {
+  const { status } = outcomeSchema.parse(request.body);
+  const lead = await prisma.lead.update({
+    where: { id: request.params.id },
+    data: { status },
+    include: includeLead
+  });
+  await audit(response, 'OUTCOME', 'Lead', lead.id, { status });
   response.json({ lead });
 });
 

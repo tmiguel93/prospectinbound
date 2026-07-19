@@ -8,7 +8,7 @@ import {
   useSensors,
   type DragEndEvent
 } from '@dnd-kit/core';
-import { Plus, Search, Upload } from 'lucide-react';
+import { CircleX, Plus, Search, Trophy, Undo2, Upload, X } from 'lucide-react';
 import { useEffect, useMemo, useState, type CSSProperties } from 'react';
 import { useForm } from 'react-hook-form';
 import { apiRequest } from '../../lib/api.js';
@@ -35,6 +35,7 @@ type Lead = {
   nextAction: string | null;
   stageId: string;
   pipelineId: string;
+  status: 'ACTIVE' | 'WON' | 'LOST';
   product: { name: string };
   owner: { name: string } | null;
 };
@@ -52,7 +53,15 @@ type FormValues = {
   notes: string;
 };
 
-function LeadCard({ lead, onQualify }: { lead: Lead; onQualify: () => void }) {
+function LeadCard({
+  lead,
+  onQualify,
+  onSelect
+}: {
+  lead: Lead;
+  onQualify: () => void;
+  onSelect: () => void;
+}) {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({ id: lead.id });
   return (
     <article
@@ -60,6 +69,7 @@ function LeadCard({ lead, onQualify }: { lead: Lead; onQualify: () => void }) {
       {...listeners}
       {...attributes}
       className={`lead-card priority-${lead.priority.toLowerCase()}`}
+      onClick={onSelect}
       onDoubleClick={onQualify}
       style={{
         transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined
@@ -81,11 +91,13 @@ function LeadCard({ lead, onQualify }: { lead: Lead; onQualify: () => void }) {
 function Column({
   stage,
   leads,
-  onQualify
+  onQualify,
+  onSelect
 }: {
   stage: Stage;
   leads: Lead[];
   onQualify: (leadId: string) => void;
+  onSelect: (leadId: string) => void;
 }) {
   const { setNodeRef } = useDroppable({ id: stage.id });
   return (
@@ -100,7 +112,12 @@ function Column({
       </header>
       <div className="space-y-3">
         {leads.map((lead) => (
-          <LeadCard key={lead.id} lead={lead} onQualify={() => onQualify(lead.id)} />
+          <LeadCard
+            key={lead.id}
+            lead={lead}
+            onQualify={() => onQualify(lead.id)}
+            onSelect={() => onSelect(lead.id)}
+          />
         ))}
       </div>
     </section>
@@ -110,6 +127,8 @@ function Column({
 export function LeadsPage() {
   const [catalog, setCatalog] = useState<Catalog>();
   const [qualifyingLeadId, setQualifyingLeadId] = useState<string>();
+  const [selectedLeadId, setSelectedLeadId] = useState<string>();
+  const [lastOutcome, setLastOutcome] = useState<Lead>();
   const [leads, setLeads] = useState<Lead[]>([]);
   const [productId, setProductId] = useState('');
   const [search, setSearch] = useState('');
@@ -158,15 +177,53 @@ export function LeadsPage() {
       ),
     [leads, stages]
   );
+  const selectedLead = leads.find((lead) => lead.id === selectedLeadId);
   const move = async ({ active, over }: DragEndEvent) => {
-    if (!over || active.id === over.id) return;
     const moved = leads.find((lead) => lead.id === active.id);
-    if (!moved || moved.stageId === over.id) return;
+    if (!moved) return;
+    setSelectedLeadId(moved.id);
+    if (!over || active.id === over.id) return;
+    if (moved.stageId === over.id) return;
     const result = await apiRequest<{ lead: Lead }>(`/api/leads/${moved.id}/move`, {
       method: 'PATCH',
       body: JSON.stringify({ stageId: over.id })
     });
     setLeads((items) => items.map((lead) => (lead.id === moved.id ? result.lead : lead)));
+  };
+  const setOutcome = async (status: 'WON' | 'LOST') => {
+    if (!selectedLead) return;
+    setError(undefined);
+    try {
+      const result = await apiRequest<{ lead: Lead }>(`/api/leads/${selectedLead.id}/outcome`, {
+        method: 'PATCH',
+        body: JSON.stringify({ status })
+      });
+      setLeads((items) => items.filter((lead) => lead.id !== result.lead.id));
+      setSelectedLeadId(undefined);
+      setLastOutcome(result.lead);
+    } catch (requestError) {
+      setError(
+        requestError instanceof Error
+          ? requestError.message
+          : 'Não foi possível atualizar o resultado.'
+      );
+    }
+  };
+  const undoOutcome = async () => {
+    if (!lastOutcome) return;
+    setError(undefined);
+    try {
+      const result = await apiRequest<{ lead: Lead }>(`/api/leads/${lastOutcome.id}/outcome`, {
+        method: 'PATCH',
+        body: JSON.stringify({ status: 'ACTIVE' })
+      });
+      setLeads((items) => [result.lead, ...items]);
+      setLastOutcome(undefined);
+    } catch (requestError) {
+      setError(
+        requestError instanceof Error ? requestError.message : 'Não foi possível reabrir o lead.'
+      );
+    }
   };
   const submit = async (data: FormValues) => {
     setError(undefined);
@@ -248,10 +305,68 @@ export function LeadsPage() {
                 stage={stage}
                 leads={grouped[stage.id] ?? []}
                 onQualify={setQualifyingLeadId}
+                onSelect={setSelectedLeadId}
               />
             ))}
           </div>
         </DndContext>
+      )}
+      {selectedLead && (
+        <aside className="lead-outcome-dock" aria-label="Resultado do lead selecionado">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+              Lead selecionado
+            </p>
+            <p className="font-semibold">{selectedLead.establishmentName}</p>
+          </div>
+          <div className="lead-outcome-actions">
+            <button
+              className="outcome-win-button"
+              onClick={() => void setOutcome('WON')}
+              type="button"
+            >
+              <Trophy size={16} />
+              Ganho
+            </button>
+            <button
+              className="outcome-loss-button"
+              onClick={() => void setOutcome('LOST')}
+              type="button"
+            >
+              <CircleX size={16} />
+              Perdido
+            </button>
+            <button
+              className="outcome-close-button"
+              onClick={() => setSelectedLeadId(undefined)}
+              type="button"
+              aria-label="Fechar ações do lead"
+              title="Fechar"
+            >
+              <X size={18} />
+            </button>
+          </div>
+        </aside>
+      )}
+      {lastOutcome && (
+        <div className="lead-outcome-feedback" role="status">
+          <span>
+            {lastOutcome.establishmentName} foi marcado como{' '}
+            {lastOutcome.status === 'WON' ? 'ganho' : 'perdido'}.
+          </span>
+          <button onClick={() => void undoOutcome()} type="button">
+            <Undo2 size={15} />
+            Desfazer
+          </button>
+          <button
+            className="outcome-close-button"
+            onClick={() => setLastOutcome(undefined)}
+            type="button"
+            aria-label="Fechar confirmação"
+          >
+            <X size={16} />
+          </button>
+        </div>
       )}
       {open && (
         <div className="modal-backdrop">

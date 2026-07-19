@@ -19,6 +19,7 @@ export const leadSchema = z.object({
   allowDuplicate: z.boolean().default(false)
 });
 export const moveSchema = z.object({ stageId: z.string().cuid() });
+export const outcomeSchema = z.object({ status: z.enum(['ACTIVE', 'WON', 'LOST']) });
 export const activitySchema = z.object({
   type: z.enum([
     'Ligação',

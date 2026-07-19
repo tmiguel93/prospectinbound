@@ -186,6 +186,67 @@ describe('CSV lead import', () => {
   });
 });
 
+describe('lead outcomes', () => {
+  beforeEach(async () => {
+    await prisma.user.deleteMany();
+  });
+
+  afterAll(async () => {
+    await prisma.$disconnect();
+  });
+
+  it('marks a lead as won or lost without changing its Kanban stage', async () => {
+    const stamp = Date.now();
+    const partner = await prisma.partner.create({ data: { name: `Parceiro resultado ${stamp}` } });
+    const pipeline = await prisma.pipeline.create({
+      data: { name: `Pipeline resultado ${stamp}` }
+    });
+    const stage = await prisma.pipelineStage.create({
+      data: {
+        pipelineId: pipeline.id,
+        name: 'Negociação',
+        color: '#0891b2',
+        position: 0,
+        isInitial: true
+      }
+    });
+    const product = await prisma.product.create({
+      data: {
+        partnerId: partner.id,
+        pipelineId: pipeline.id,
+        name: `Produto resultado ${stamp}`,
+        segment: 'Teste'
+      }
+    });
+    const agent = request.agent(app);
+    await agent.post('/api/auth/setup').send({
+      name: 'Admin',
+      email: `resultado-${stamp}@example.com`,
+      password: 'senha-segura-123'
+    });
+    const created = await agent.post('/api/leads').send({
+      establishmentName: 'Empresa com resultado',
+      productId: product.id,
+      pipelineId: pipeline.id,
+      stageId: stage.id
+    });
+
+    const won = await agent
+      .patch(`/api/leads/${created.body.lead.id}/outcome`)
+      .send({ status: 'WON' });
+    expect(won.status).toBe(200);
+    expect(won.body.lead.status).toBe('WON');
+    expect(won.body.lead.stageId).toBe(stage.id);
+    expect((await agent.get(`/api/leads?status=WON`)).body.leads).toEqual(
+      expect.arrayContaining([expect.objectContaining({ id: created.body.lead.id })])
+    );
+    expect(
+      (await agent.patch(`/api/leads/${created.body.lead.id}/outcome`).send({ status: 'INVALID' }))
+        .status
+    ).toBe(400);
+  });
+});
+
 describe('local backups', () => {
   beforeEach(async () => {
     await prisma.user.deleteMany();

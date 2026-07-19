@@ -2,7 +2,7 @@
 
 ## Módulo atual
 
-Módulo 34 — Navegação adaptável e lateral retrátil (concluído).
+Módulo 35 — Resultado de lead no Kanban (concluído).
 
 ## Módulos concluídos
 
@@ -41,17 +41,18 @@ Módulo 34 — Navegação adaptável e lateral retrátil (concluído).
 - Módulo 32 — CI no GitHub, auditoria de dependências e bootstrap do banco de testes em ambiente limpo.
 - Módulo 33 — Proxy reverso Nginx, cabeçalhos de borda e limite de payload na infraestrutura Docker.
 - Módulo 34 — Layout responsivo, menu lateral retrátil persistente, navegação móvel com sobreposição e ajustes da central de conversas.
+- Módulo 35 — Ações flutuantes de ganho/perda no Kanban, reversão segura e auditoria do resultado sem alterar a etapa do lead.
 
 ## Último commit
 
-`feat: make navigation responsive and collapsible`.
+`feat: add lead outcomes from kanban`.
 
 ## Testes executados
 
 - `npx prettier --check` nos arquivos do módulo
 - `npx eslint apps packages scripts --max-warnings=0`
 - `npm run typecheck`
-- `npm run test` — 9 testes aprovados.
+- `npm run test` — 10 testes aprovados.
 - `npm run build`
 
 ## Pendências conhecidas

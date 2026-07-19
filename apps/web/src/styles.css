@@ -354,6 +354,105 @@ body {
 .lead-card:active {
   cursor: grabbing;
 }
+.lead-outcome-dock {
+  position: fixed;
+  z-index: 30;
+  right: 1rem;
+  bottom: 1rem;
+  left: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: min(100% - 2rem, 46rem);
+  margin-inline: auto;
+  border: 1px solid #cbd5e1;
+  border-radius: 1rem;
+  background: rgb(255 255 255 / 0.96);
+  padding: 0.8rem 0.9rem;
+  box-shadow: 0 18px 40px rgb(15 23 42 / 0.2);
+  backdrop-filter: blur(12px);
+}
+.lead-outcome-actions,
+.lead-outcome-feedback {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.outcome-win-button,
+.outcome-loss-button,
+.outcome-close-button,
+.lead-outcome-feedback button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  border-radius: 0.625rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+.outcome-win-button,
+.outcome-loss-button {
+  padding: 0.6rem 0.75rem;
+}
+.outcome-win-button {
+  background: #15803d;
+  color: white;
+}
+.outcome-win-button:hover {
+  background: #166534;
+}
+.outcome-loss-button {
+  background: #fff1f2;
+  color: #be123c;
+}
+.outcome-loss-button:hover {
+  background: #ffe4e6;
+}
+.outcome-close-button {
+  padding: 0.5rem;
+  color: #64748b;
+}
+.outcome-close-button:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+.lead-outcome-feedback {
+  position: fixed;
+  z-index: 31;
+  right: 1rem;
+  bottom: 1rem;
+  max-width: calc(100% - 2rem);
+  border: 1px solid #a7f3d0;
+  border-radius: 0.75rem;
+  background: #ecfdf5;
+  padding: 0.65rem 0.75rem;
+  color: #065f46;
+  box-shadow: 0 10px 24px rgb(15 23 42 / 0.14);
+  font-size: 0.875rem;
+}
+.lead-outcome-feedback button:not(.outcome-close-button) {
+  padding: 0.35rem 0.5rem;
+  color: #047857;
+}
+.lead-outcome-feedback button:not(.outcome-close-button):hover {
+  background: #d1fae5;
+}
+:root[data-theme='dark'] .lead-outcome-dock {
+  border-color: #334155;
+  background: rgb(15 23 42 / 0.96);
+}
+:root[data-theme='dark'] .outcome-loss-button {
+  background: #4c0519;
+  color: #fecdd3;
+}
+:root[data-theme='dark'] .outcome-loss-button:hover {
+  background: #881337;
+}
+:root[data-theme='dark'] .outcome-close-button:hover {
+  background: #1e293b;
+  color: #f8fafc;
+}
 .priority-alta {
   border-left: 3px solid #ef4444;
 }
@@ -627,5 +726,20 @@ body {
   }
   .channel-switch button {
     white-space: nowrap;
+  }
+  .lead-outcome-dock {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .lead-outcome-actions {
+    width: 100%;
+  }
+  .outcome-win-button,
+  .outcome-loss-button {
+    flex: 1;
+  }
+  .lead-outcome-feedback {
+    align-items: flex-start;
+    flex-wrap: wrap;
   }
 }
