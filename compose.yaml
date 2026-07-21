@@ -9,7 +9,7 @@ services:
       DATABASE_URL: file:../../data/crm-local.db
       JWT_SECRET: ${JWT_SECRET:?Defina JWT_SECRET com ao menos 32 caracteres no arquivo .env.docker}
     ports:
-      - '3000:3000'
+      - '127.0.0.1:3000:3000'
     volumes:
       - crm_data:/app/data
       - crm_backups:/app/backups

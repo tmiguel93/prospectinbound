@@ -31,11 +31,14 @@ function AuthenticatedApp({ user, onLogout }: { user: User; onLogout: () => void
           <Route path="/conversas" element={<ConversationsPage />} />
           <Route path="/agenda" element={<AgendaPage />} />
           <Route path="/usuarios" element={<UsersPage />} />
-          <Route path="/vendas" element={<SalesPage />} />
+          <Route path="/vendas" element={<SalesPage canManage={user.role === 'ADMIN'} />} />
           <Route path="/pipelines" element={<Navigate to="/leads" replace />} />
           <Route path="/assinaturas" element={<SubscriptionsPage />} />
           <Route path="/relatorios" element={<ReportsPage />} />
-          <Route path="/comissoes" element={<CommissionsPage />} />
+          <Route
+            path="/comissoes"
+            element={<CommissionsPage canManage={user.role === 'ADMIN'} />}
+          />
           <Route path="/configuracoes" element={<SettingsPage />} />
           <Route path="/auditoria" element={<AuditPage />} />
           {placeholders.map((title) => (

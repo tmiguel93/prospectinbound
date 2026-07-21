@@ -11,7 +11,7 @@ export async function requireAuth(request: Request, response: Response, next: Ne
   }
 
   const user = await prisma.user.findUnique({ where: { id: session.sub } });
-  if (!user || !user.active) {
+  if (!user || !user.active || user.sessionVersion !== session.sessionVersion) {
     response.status(401).json({ message: 'Sessão inválida.' });
     return;
   }

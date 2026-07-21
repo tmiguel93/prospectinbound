@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { prisma } from '../../lib/prisma.js';
+import { leadScope } from '../auth/auth.access.js';
 import { audit } from '../audit/audit.service.js';
 import { requireAuth } from '../auth/auth.middleware.js';
 import { internalMessageSchema } from './communications.schemas.js';
@@ -11,6 +12,7 @@ communicationsRouter.get('/leads', async (request, response) => {
   const search = typeof request.query.search === 'string' ? request.query.search.trim() : '';
   const leads = await prisma.lead.findMany({
     where: {
+      ...leadScope(response),
       status: 'ACTIVE',
       ...(search
         ? {
@@ -43,7 +45,11 @@ communicationsRouter.get('/leads', async (request, response) => {
 });
 
 communicationsRouter.get('/leads/:leadId/messages', async (request, response) => {
-  await prisma.lead.findUniqueOrThrow({ where: { id: request.params.leadId } });
+  const lead = await prisma.lead.findFirst({
+    where: { id: request.params.leadId, ...leadScope(response) },
+    select: { id: true }
+  });
+  if (!lead) return response.status(404).json({ message: 'Lead não encontrado.' });
   const messages = await prisma.communicationMessage.findMany({
     where: { leadId: request.params.leadId },
     include: { sender: { select: { id: true, name: true } } },
@@ -55,10 +61,14 @@ communicationsRouter.get('/leads/:leadId/messages', async (request, response) =>
 
 communicationsRouter.post('/leads/:leadId/messages', async (request, response) => {
   const input = internalMessageSchema.parse(request.body);
-  await prisma.lead.findUniqueOrThrow({ where: { id: request.params.leadId } });
+  const lead = await prisma.lead.findFirst({
+    where: { id: request.params.leadId, ...leadScope(response) },
+    select: { id: true }
+  });
+  if (!lead) return response.status(404).json({ message: 'Lead não encontrado.' });
   const message = await prisma.communicationMessage.create({
     data: {
-      leadId: request.params.leadId,
+      leadId: lead.id,
       senderId: response.locals.user.id,
       channel: 'INTERNAL',
       direction: 'OUTBOUND',

@@ -30,7 +30,7 @@ services:
         'node scripts/prepare-postgres-schema.mjs && ./node_modules/.bin/prisma db push --schema apps/api/postgres/schema.prisma && npm run start'
       ]
     ports:
-      - '3002:3000'
+      - '127.0.0.1:3002:3000'
     volumes:
       - postgres_backups:/app/backups
     depends_on:

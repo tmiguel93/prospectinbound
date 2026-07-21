@@ -247,6 +247,80 @@ describe('lead outcomes', () => {
   });
 });
 
+describe('access control for sellers', () => {
+  beforeEach(async () => {
+    await prisma.user.deleteMany();
+  });
+
+  afterAll(async () => {
+    await prisma.$disconnect();
+  });
+
+  it('keeps leads and commercial actions limited to their owner', async () => {
+    const stamp = Date.now();
+    const partner = await prisma.partner.create({ data: { name: `Parceiro acesso ${stamp}` } });
+    const pipeline = await prisma.pipeline.create({ data: { name: `Pipeline acesso ${stamp}` } });
+    const stage = await prisma.pipelineStage.create({
+      data: {
+        pipelineId: pipeline.id,
+        name: 'Entrada',
+        color: '#0891b2',
+        position: 0,
+        isInitial: true
+      }
+    });
+    const product = await prisma.product.create({
+      data: {
+        partnerId: partner.id,
+        pipelineId: pipeline.id,
+        name: `Produto acesso ${stamp}`,
+        segment: 'Teste'
+      }
+    });
+    const admin = request.agent(app);
+    await admin.post('/api/auth/setup').send({
+      name: 'Admin',
+      email: `admin-acesso-${stamp}@example.com`,
+      password: 'senha-segura-123'
+    });
+    await admin.post('/api/users').send({
+      name: 'Vendedor',
+      email: `vendedor-${stamp}@example.com`,
+      password: 'senha-segura-123',
+      role: 'SELLER'
+    });
+    const created = await admin.post('/api/leads').send({
+      establishmentName: 'Lead da administradora',
+      productId: product.id,
+      pipelineId: pipeline.id,
+      stageId: stage.id
+    });
+    const seller = request.agent(app);
+    await seller.post('/api/auth/login').send({
+      email: `vendedor-${stamp}@example.com`,
+      password: 'senha-segura-123'
+    });
+
+    expect((await seller.get('/api/leads')).body.leads).not.toEqual(
+      expect.arrayContaining([expect.objectContaining({ id: created.body.lead.id })])
+    );
+    expect(
+      (await seller.patch(`/api/leads/${created.body.lead.id}/outcome`).send({ status: 'WON' }))
+        .status
+    ).toBe(404);
+    expect(
+      (
+        await seller.post('/api/sales').send({
+          leadId: created.body.lead.id,
+          productId: product.id,
+          planId: 'ckx0000000000000000000000',
+          amountCents: 1000
+        })
+      ).status
+    ).toBe(404);
+  });
+});
+
 describe('local backups', () => {
   beforeEach(async () => {
     await prisma.user.deleteMany();

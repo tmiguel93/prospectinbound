@@ -10,6 +10,7 @@ const passwordRounds = 12;
 export type SessionPayload = {
   sub: string;
   role: UserRole;
+  sessionVersion: number;
 };
 
 export const toPublicUser = (user: User) => ({
@@ -42,7 +43,7 @@ export async function authenticate(email: string, password: string) {
 }
 
 export function createSessionToken(user: User) {
-  return jwt.sign({ role: user.role }, env.jwtSecret, {
+  return jwt.sign({ role: user.role, sessionVersion: user.sessionVersion }, env.jwtSecret, {
     subject: user.id,
     expiresIn: '8h'
   });
@@ -51,11 +52,20 @@ export function createSessionToken(user: User) {
 export function readSessionToken(token: string): SessionPayload | null {
   try {
     const decoded = jwt.verify(token, env.jwtSecret);
-    if (typeof decoded === 'string' || !decoded.sub || typeof decoded.role !== 'string') {
+    if (
+      typeof decoded === 'string' ||
+      !decoded.sub ||
+      typeof decoded.role !== 'string' ||
+      typeof decoded.sessionVersion !== 'number'
+    ) {
       return null;
     }
 
-    return { sub: decoded.sub, role: decoded.role as UserRole };
+    return {
+      sub: decoded.sub,
+      role: decoded.role as UserRole,
+      sessionVersion: decoded.sessionVersion
+    };
   } catch {
     return null;
   }

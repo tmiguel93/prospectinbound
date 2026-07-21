@@ -77,7 +77,12 @@ usersRouter.patch('/:id', async (request, response) => {
       return response.status(400).json({ message: 'Você não pode desativar seu próprio acesso.' });
     const user = await prisma.user.update({
       where: { id },
-      data: { ...changes, ...(password ? { passwordHash: await bcrypt.hash(password, 12) } : {}) },
+      data: {
+        ...changes,
+        ...(password
+          ? { passwordHash: await bcrypt.hash(password, 12), sessionVersion: { increment: 1 } }
+          : {})
+      },
       select: publicSelect
     });
     await audit(response, 'UPDATE', 'User', user.id, {

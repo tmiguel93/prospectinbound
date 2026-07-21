@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { prisma } from '../../lib/prisma.js';
+import { commissionScope } from '../auth/auth.access.js';
 import { audit } from '../audit/audit.service.js';
 import { requireAdmin, requireAuth } from '../auth/auth.middleware.js';
 
@@ -7,6 +8,7 @@ export const commissionsRouter = Router();
 commissionsRouter.use(requireAuth);
 commissionsRouter.get('/', async (_request, response) => {
   const entries = await prisma.commissionEntry.findMany({
+    where: commissionScope(response),
     include: { sale: { include: { lead: true, product: true } }, payment: true },
     orderBy: { createdAt: 'desc' }
   });

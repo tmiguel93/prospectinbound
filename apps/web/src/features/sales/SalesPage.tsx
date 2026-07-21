@@ -12,7 +12,7 @@ type Sale = {
   payments: Array<{ id: string; amountCents: number; paidAt: string }>;
 };
 const money = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
-export function SalesPage() {
+export function SalesPage({ canManage }: { canManage: boolean }) {
   const [sales, setSales] = useState<Sale[]>([]);
   const [error, setError] = useState('');
   const load = () =>
@@ -60,18 +60,20 @@ export function SalesPage() {
                   {s.payments.length}
                 </p>
               </div>
-              <div className="flex gap-2">
-                {s.status !== 'PAYMENT_CONFIRMED' && s.status !== 'CANCELED' && (
-                  <button className="primary-button" onClick={() => confirm(s.id, s.amountCents)}>
-                    Confirmar pagamento
-                  </button>
-                )}
-                {s.status !== 'CANCELED' && (
-                  <button className="secondary-button" onClick={() => void cancel(s.id)}>
-                    Cancelar
-                  </button>
-                )}
-              </div>
+              {canManage && (
+                <div className="flex gap-2">
+                  {s.status !== 'PAYMENT_CONFIRMED' && s.status !== 'CANCELED' && (
+                    <button className="primary-button" onClick={() => confirm(s.id, s.amountCents)}>
+                      Confirmar pagamento
+                    </button>
+                  )}
+                  {s.status !== 'CANCELED' && (
+                    <button className="secondary-button" onClick={() => void cancel(s.id)}>
+                      Cancelar
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
           </article>
         ))}

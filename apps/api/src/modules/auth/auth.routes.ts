@@ -62,7 +62,11 @@ authRouter.post('/login', loginLimiter, async (request, response) => {
     .json({ user: toPublicUser(user) });
 });
 
-authRouter.post('/logout', (_request, response) => {
+authRouter.post('/logout', requireAuth, async (_request, response) => {
+  await prisma.user.update({
+    where: { id: response.locals.user.id },
+    data: { sessionVersion: { increment: 1 } }
+  });
   response.clearCookie(sessionCookie, cookieOptions).status(204).send();
 });
 

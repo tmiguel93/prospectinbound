@@ -2,7 +2,7 @@
 
 ## Módulo atual
 
-Módulo 36 — Identidade visual e responsividade operacional (concluído).
+Módulo 41 — Sessões, limites e backups robustos (concluído).
 
 ## Módulos concluídos
 
@@ -43,17 +43,22 @@ Módulo 36 — Identidade visual e responsividade operacional (concluído).
 - Módulo 34 — Layout responsivo, menu lateral retrátil persistente, navegação móvel com sobreposição e ajustes da central de conversas.
 - Módulo 35 — Ações flutuantes de ganho/perda no Kanban, reversão segura e auditoria do resultado sem alterar a etapa do lead.
 - Módulo 36 — Marca vetorial de machado minimalista, modais móveis aprimorados e tabelas operacionais com rolagem horizontal responsiva.
+- Módulo 37 — Autorização por proprietário: leads, conversas, reuniões, vendas, comissões, exportações e indicadores isolados por vendedor.
+- Módulo 38 — Integridade comercial: compatibilidade entre lead e produto, operações financeiras administrativas e proteção contra primeiro pagamento duplicado.
+- Módulo 39 — Exportação CSV segura contra fórmulas e trilha de auditoria de exportações.
+- Módulo 40 — Exposição de rede restrita a localhost nos Compose e orientação explícita de TLS para acesso externo.
+- Módulo 41 — Revogação de sessões, webhook WhatsApp em modo fail-closed, limites de requisição e backups PostgreSQL com pg_dump/pg_restore.
 
 ## Último commit
 
-`feat: add minimal axe brand mark and mobile refinements`.
+`security: harden access, sessions and operations`.
 
 ## Testes executados
 
 - `npx prettier --check` nos arquivos do módulo
 - `npx eslint apps packages scripts --max-warnings=0`
 - `npm run typecheck`
-- `npm run test` — 10 testes aprovados.
+- `npm run test` — 11 testes aprovados.
 - `npm run build`
 
 ## Pendências conhecidas

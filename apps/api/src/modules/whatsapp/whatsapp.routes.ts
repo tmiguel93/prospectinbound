@@ -1,6 +1,8 @@
 import { Router } from 'express';
+import rateLimit from 'express-rate-limit';
 import { env } from '../../config/env.js';
 import { prisma } from '../../lib/prisma.js';
+import { leadScope } from '../auth/auth.access.js';
 import { audit } from '../audit/audit.service.js';
 import { requireAuth } from '../auth/auth.middleware.js';
 import { sendWhatsappMessageSchema } from './whatsapp.schemas.js';
@@ -13,11 +15,26 @@ import {
 
 export const whatsappRouter = Router();
 
+const outboundLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 30,
+  standardHeaders: 'draft-8',
+  legacyHeaders: false,
+  message: { message: 'Limite de mensagens atingido. Tente novamente em alguns minutos.' }
+});
+
 whatsappRouter.get('/webhook', (request, response) => {
   const mode = request.query['hub.mode'];
   const token = request.query['hub.verify_token'];
   const challenge = request.query['hub.challenge'];
-  if (mode === 'subscribe' && token === env.whatsapp.verifyToken && typeof challenge === 'string') {
+  if (!env.whatsapp.verifyToken)
+    return response.status(503).json({ message: 'Webhook do WhatsApp não configurado.' });
+  if (
+    mode === 'subscribe' &&
+    typeof token === 'string' &&
+    token === env.whatsapp.verifyToken &&
+    typeof challenge === 'string'
+  ) {
     response.status(200).send(challenge);
     return;
   }
@@ -79,9 +96,12 @@ whatsappRouter.get('/status', (_request, response) => {
   response.json(whatsappConfiguration());
 });
 
-whatsappRouter.post('/messages', async (request, response) => {
+whatsappRouter.post('/messages', outboundLimiter, async (request, response) => {
   const input = sendWhatsappMessageSchema.parse(request.body);
-  const lead = await prisma.lead.findUniqueOrThrow({ where: { id: input.leadId } });
+  const lead = await prisma.lead.findFirst({
+    where: { id: input.leadId, ...leadScope(response) }
+  });
+  if (!lead) return response.status(404).json({ message: 'Lead não encontrado.' });
   const contact = normalizeWhatsappNumber(lead.whatsapp || lead.phone || '');
   if (!contact) {
     response.status(400).json({ message: 'O lead não possui WhatsApp ou telefone para contato.' });

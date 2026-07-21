@@ -12,7 +12,7 @@ O Compose entrega a aplicação completa em um único contêiner: a API Express 
 docker compose --env-file .env.docker up --build -d
 ```
 
-Abra `http://localhost:3000`. Se o modo de desenvolvimento já estiver usando essa porta, encerre-o antes ou altere temporariamente a porta publicada em `compose.yaml`.
+Abra `http://localhost:3000`. A porta é vinculada somente a `localhost`, evitando exposição HTTP na rede local. Se o modo de desenvolvimento já estiver usando essa porta, encerre-o antes ou altere temporariamente a porta publicada em `compose.yaml`.
 
 ## Operação
 
@@ -37,4 +37,4 @@ Para expor o CRM por um gateway Nginx local, com cabeçalhos de borda e limite d
 docker compose --env-file .env.docker -f compose.yaml -f compose.proxy.yaml up --build -d
 ```
 
-O acesso pelo gateway será `http://localhost:8080`; a porta direta `3000` continua disponível para diagnóstico. Em produção, termine TLS no proxy ou balanceador da infraestrutura e mantenha `JWT_SECRET` privado.
+O acesso pelo gateway será `http://localhost:8080`; a porta direta `3000` continua disponível apenas no próprio computador para diagnóstico. Para expor o CRM a outra máquina, use um proxy ou balanceador com TLS válido e mantenha `JWT_SECRET` privado; não publique as portas HTTP deste Compose diretamente na internet ou na LAN.

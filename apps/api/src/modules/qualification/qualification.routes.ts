@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { z } from 'zod';
 import { prisma } from '../../lib/prisma.js';
+import { leadScope } from '../auth/auth.access.js';
 import { requireAuth } from '../auth/auth.middleware.js';
 import { audit } from '../audit/audit.service.js';
 
@@ -12,13 +13,14 @@ const responseSchema = z.object({
 export const qualificationRouter = Router();
 qualificationRouter.use(requireAuth);
 qualificationRouter.get('/:leadId', async (request, response) => {
-  const lead = await prisma.lead.findUniqueOrThrow({
-    where: { id: request.params.leadId },
+  const lead = await prisma.lead.findFirst({
+    where: { id: request.params.leadId, ...leadScope(response) },
     include: {
       product: { include: { questions: { orderBy: { position: 'asc' } } } },
       qualificationResponses: true
     }
   });
+  if (!lead) return response.status(404).json({ message: 'Lead não encontrado.' });
   response.json({
     score: lead.score,
     questions: lead.product.questions,
@@ -27,10 +29,11 @@ qualificationRouter.get('/:leadId', async (request, response) => {
 });
 qualificationRouter.put('/:leadId/responses', async (request, response) => {
   const input = responseSchema.parse(request.body);
-  const lead = await prisma.lead.findUniqueOrThrow({
-    where: { id: request.params.leadId },
+  const lead = await prisma.lead.findFirst({
+    where: { id: request.params.leadId, ...leadScope(response) },
     select: { productId: true }
   });
+  if (!lead) return response.status(404).json({ message: 'Lead não encontrado.' });
   if (
     !(await prisma.productQuestion.findFirst({
       where: { id: input.questionId, productId: lead.productId }

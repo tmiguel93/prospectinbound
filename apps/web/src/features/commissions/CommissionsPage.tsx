@@ -25,7 +25,7 @@ function formatMoney(cents: number) {
   return money.format(cents / 100);
 }
 
-export function CommissionsPage() {
+export function CommissionsPage({ canManage }: { canManage: boolean }) {
   const [data, setData] = useState<CommissionResponse>({ entries: [], totals: {} });
   const [error, setError] = useState('');
   const [busyId, setBusyId] = useState<string>();
@@ -120,26 +120,28 @@ export function CommissionsPage() {
                     <span className="badge">{statusLabel[entry.status] ?? entry.status}</span>
                   </td>
                   <td className="px-4 py-4">
-                    <div className="flex gap-2">
-                      {entry.status === 'CONFIRMED' && (
-                        <button
-                          className="primary-button"
-                          disabled={busyId === entry.id}
-                          onClick={() => void runAction(entry, 'pay')}
-                        >
-                          Pagar
-                        </button>
-                      )}
-                      {entry.type !== 'REVERSAL' && (
-                        <button
-                          className="secondary-button"
-                          disabled={busyId === entry.id}
-                          onClick={() => void runAction(entry, 'reverse')}
-                        >
-                          Estornar
-                        </button>
-                      )}
-                    </div>
+                    {canManage && (
+                      <div className="flex gap-2">
+                        {entry.status === 'CONFIRMED' && (
+                          <button
+                            className="primary-button"
+                            disabled={busyId === entry.id}
+                            onClick={() => void runAction(entry, 'pay')}
+                          >
+                            Pagar
+                          </button>
+                        )}
+                        {entry.type !== 'REVERSAL' && (
+                          <button
+                            className="secondary-button"
+                            disabled={busyId === entry.id}
+                            onClick={() => void runAction(entry, 'reverse')}
+                          >
+                            Estornar
+                          </button>
+                        )}
+                      </div>
+                    )}
                   </td>
                 </tr>
               ))}

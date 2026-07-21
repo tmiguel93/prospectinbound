@@ -11,7 +11,7 @@ O SQLite continua sendo o modo local simples, enquanto `compose.postgres.yaml` o
 docker compose --env-file .env.postgres -f compose.postgres.yaml up --build -d
 ```
 
-O CRM fica disponível em `http://localhost:3002` e o PostgreSQL não é exposto para a rede do computador. Os dados ficam nos volumes `postgres_data` e `postgres_backups`.
+O CRM fica disponível em `http://localhost:3002` e o PostgreSQL não é exposto para a rede do computador. A porta do CRM também fica vinculada ao próprio computador; para acesso externo, use um proxy com TLS. Os dados ficam nos volumes `postgres_data` e `postgres_backups`. A tela de backups usa `pg_dump` para criar arquivos `.dump` e `pg_restore` para restaurá-los, sempre criando uma cópia de emergência antes da troca.
 
 ## Migração segura do SQLite
 

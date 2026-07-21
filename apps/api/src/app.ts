@@ -2,6 +2,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import express from 'express';
 import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
 import { healthResponseSchema } from '@prospectinbound/shared';
 import { env } from './config/env.js';
 import { authRouter } from './modules/auth/auth.routes.js';
@@ -23,6 +24,8 @@ import { errorHandler } from './shared/error-handler.js';
 
 export const app = express();
 
+app.set('trust proxy', 1);
+
 app.use(helmet({ contentSecurityPolicy: env.isProduction ? undefined : false }));
 app.use(
   cors({
@@ -39,6 +42,18 @@ app.use(
   })
 );
 app.use(cookieParser());
+
+app.use(
+  '/api',
+  rateLimit({
+    windowMs: 15 * 60 * 1000,
+    limit: 300,
+    standardHeaders: 'draft-8',
+    legacyHeaders: false,
+    skip: (request) => request.path === '/whatsapp/webhook',
+    message: { message: 'Muitas solicitações. Tente novamente em alguns minutos.' }
+  })
+);
 
 app.get('/health', (_request, response) => {
   const payload = healthResponseSchema.parse({ status: 'ok' });

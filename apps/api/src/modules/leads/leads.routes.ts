@@ -1,6 +1,7 @@
 import { Prisma } from '@prisma/client';
 import { Router } from 'express';
 import { prisma } from '../../lib/prisma.js';
+import { leadScope } from '../auth/auth.access.js';
 import { requireAuth } from '../auth/auth.middleware.js';
 import { audit } from '../audit/audit.service.js';
 import { activitySchema, leadSchema, moveSchema, outcomeSchema } from './leads.schemas.js';
@@ -24,6 +25,7 @@ leadsRouter.get('/', async (request, response) => {
     status?: string;
   };
   const where: Prisma.LeadWhereInput = {
+    ...leadScope(response),
     ...(query.pipelineId ? { pipelineId: query.pipelineId } : {}),
     ...(query.productId ? { productId: query.productId } : {}),
     ...(query.status ? { status: query.status } : { status: 'ACTIVE' }),
@@ -52,6 +54,7 @@ leadsRouter.post('/duplicates', async (request, response) => {
     .parse(request.body);
   const matches = await prisma.lead.findMany({
     where: {
+      ...leadScope(response),
       productId: body.productId,
       OR: [
         { establishmentName: body.establishmentName },
@@ -74,6 +77,7 @@ leadsRouter.post('/', async (request, response) => {
     return response.status(400).json({ message: 'A etapa não pertence ao pipeline selecionado.' });
   const duplicates = await prisma.lead.findMany({
     where: {
+      ...leadScope(response),
       productId: input.productId,
       OR: [
         { establishmentName: input.establishmentName },
@@ -104,7 +108,10 @@ leadsRouter.post('/', async (request, response) => {
 
 leadsRouter.patch('/:id/move', async (request, response) => {
   const { stageId } = moveSchema.parse(request.body);
-  const current = await prisma.lead.findUniqueOrThrow({ where: { id: request.params.id } });
+  const current = await prisma.lead.findFirst({
+    where: { id: request.params.id, ...leadScope(response) }
+  });
+  if (!current) return response.status(404).json({ message: 'Lead não encontrado.' });
   const stage = await prisma.pipelineStage.findFirst({
     where: { id: stageId, pipelineId: current.pipelineId }
   });
@@ -127,22 +134,31 @@ leadsRouter.patch('/:id/move', async (request, response) => {
 
 leadsRouter.patch('/:id/outcome', async (request, response) => {
   const { status } = outcomeSchema.parse(request.body);
-  const lead = await prisma.lead.update({
-    where: { id: request.params.id },
+  const lead = await prisma.lead.findFirst({
+    where: { id: request.params.id, ...leadScope(response) }
+  });
+  if (!lead) return response.status(404).json({ message: 'Lead não encontrado.' });
+  const updated = await prisma.lead.update({
+    where: { id: lead.id },
     data: { status },
     include: includeLead
   });
-  await audit(response, 'OUTCOME', 'Lead', lead.id, { status });
-  response.json({ lead });
+  await audit(response, 'OUTCOME', 'Lead', updated.id, { status });
+  response.json({ lead: updated });
 });
 
 leadsRouter.post('/:id/activities', async (request, response) => {
   const input = activitySchema.parse(request.body);
+  const lead = await prisma.lead.findFirst({
+    where: { id: request.params.id, ...leadScope(response) },
+    select: { id: true }
+  });
+  if (!lead) return response.status(404).json({ message: 'Lead não encontrado.' });
   const activity = await prisma.leadActivity.create({
-    data: { leadId: request.params.id, ...input }
+    data: { leadId: lead.id, ...input }
   });
   await prisma.lead.update({
-    where: { id: request.params.id },
+    where: { id: lead.id },
     data: { lastContactAt: new Date() }
   });
   await audit(response, 'ACTIVITY', 'Lead', activity.leadId, { type: activity.type });
