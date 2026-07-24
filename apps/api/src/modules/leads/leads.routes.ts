@@ -4,7 +4,13 @@ import { prisma } from '../../lib/prisma.js';
 import { leadScope } from '../auth/auth.access.js';
 import { requireAuth } from '../auth/auth.middleware.js';
 import { audit } from '../audit/audit.service.js';
-import { activitySchema, leadSchema, moveSchema, outcomeSchema } from './leads.schemas.js';
+import {
+  activitySchema,
+  assignmentSchema,
+  leadSchema,
+  moveSchema,
+  outcomeSchema
+} from './leads.schemas.js';
 
 const includeLead = {
   product: true,
@@ -97,6 +103,8 @@ leadsRouter.post('/', async (request, response) => {
       ...data,
       email: data.email || null,
       nextActionAt: nextActionAt ? new Date(nextActionAt) : null,
+      expectedCloseAt: data.expectedCloseAt ? new Date(data.expectedCloseAt) : null,
+      consentCapturedAt: data.consentCapturedAt ? new Date(data.consentCapturedAt) : null,
       ownerId: response.locals.user.id,
       stageHistory: { create: { userId: response.locals.user.id, nextId: input.stageId } }
     },
@@ -133,18 +141,71 @@ leadsRouter.patch('/:id/move', async (request, response) => {
 });
 
 leadsRouter.patch('/:id/outcome', async (request, response) => {
-  const { status } = outcomeSchema.parse(request.body);
+  const { status, lossReason } = outcomeSchema.parse(request.body);
+  if (status === 'LOST' && !lossReason)
+    return response.status(400).json({ message: 'Informe o motivo da perda.' });
   const lead = await prisma.lead.findFirst({
     where: { id: request.params.id, ...leadScope(response) }
   });
   if (!lead) return response.status(404).json({ message: 'Lead não encontrado.' });
   const updated = await prisma.lead.update({
     where: { id: lead.id },
-    data: { status },
+    data: {
+      status,
+      lossReason: status === 'LOST' ? lossReason : null,
+      outcomeAt: status === 'ACTIVE' ? null : new Date()
+    },
     include: includeLead
   });
   await audit(response, 'OUTCOME', 'Lead', updated.id, { status });
   response.json({ lead: updated });
+});
+
+leadsRouter.patch('/:id/owner', async (request, response) => {
+  if (response.locals.user.role !== 'ADMIN')
+    return response.status(403).json({ message: 'Atribuição restrita a administradores.' });
+  const { ownerId } = assignmentSchema.parse(request.body);
+  if (ownerId) {
+    const owner = await prisma.user.findFirst({ where: { id: ownerId, active: true } });
+    if (!owner) return response.status(400).json({ message: 'Responsável inválido ou inativo.' });
+  }
+  const lead = await prisma.lead.update({ where: { id: request.params.id }, data: { ownerId } });
+  await audit(response, 'ASSIGN', 'Lead', lead.id, { ownerId });
+  response.json({ lead });
+});
+
+leadsRouter.get('/:id/privacy-export', async (request, response) => {
+  const lead = await prisma.lead.findFirst({
+    where: { id: request.params.id, ...leadScope(response) },
+    include: { activities: true, meetings: true, messages: true, sales: true }
+  });
+  if (!lead) return response.status(404).json({ message: 'Lead não encontrado.' });
+  await audit(response, 'PRIVACY_EXPORT', 'Lead', lead.id, {});
+  response.json({ lead });
+});
+
+leadsRouter.post('/:id/anonymize', async (request, response) => {
+  if (response.locals.user.role !== 'ADMIN')
+    return response.status(403).json({ message: 'Anonimização restrita a administradores.' });
+  const lead = await prisma.lead.update({
+    where: { id: request.params.id },
+    data: {
+      establishmentName: 'Titular anonimizado',
+      contactName: null,
+      phone: null,
+      whatsapp: null,
+      email: null,
+      city: null,
+      state: null,
+      notes: null,
+      consentCapturedAt: null,
+      consentSource: null,
+      legalBasis: null,
+      anonymizedAt: new Date()
+    }
+  });
+  await audit(response, 'ANONYMIZE', 'Lead', lead.id, {});
+  response.json({ lead });
 });
 
 leadsRouter.post('/:id/activities', async (request, response) => {

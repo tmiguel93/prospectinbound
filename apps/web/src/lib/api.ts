@@ -4,6 +4,7 @@ export type User = {
   email: string;
   role: 'ADMIN' | 'SELLER';
   active: boolean;
+  monthlyGoalCents?: number;
 };
 
 export type DashboardSummary = {

@@ -28,6 +28,7 @@ model User {
   role         UserRole @default(SELLER)
   active       Boolean  @default(true)
   sessionVersion Int    @default(0)
+  monthlyGoalCents Int  @default(0)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   leads        Lead[]
@@ -166,6 +167,14 @@ model Lead {
   lastContactAt     DateTime?
   notes             String?
   status            String              @default("ACTIVE")
+  estimatedValueCents Int?
+  expectedCloseAt   DateTime?
+  lossReason        String?
+  outcomeAt         DateTime?
+  consentCapturedAt DateTime?
+  consentSource     String?
+  legalBasis        String?
+  anonymizedAt      DateTime?
   product           Product             @relation(fields: [productId], references: [id])
   pipeline          Pipeline            @relation(fields: [pipelineId], references: [id])
   stage             PipelineStage       @relation(fields: [stageId], references: [id])
@@ -318,4 +327,13 @@ model CommunicationMessage {
 
   @@index([leadId, createdAt])
   @@index([channel, createdAt])
+}
+
+model MessageTemplate {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  content   String
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

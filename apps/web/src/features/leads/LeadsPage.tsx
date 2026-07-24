@@ -51,6 +51,11 @@ type FormValues = {
   priority: 'Baixa' | 'Normal' | 'Alta';
   nextAction: string;
   notes: string;
+  estimatedValueCents: string;
+  expectedCloseAt: string;
+  consentCapturedAt: string;
+  consentSource: string;
+  legalBasis: string;
 };
 
 function LeadCard({
@@ -124,11 +129,12 @@ function Column({
   );
 }
 
-export function LeadsPage() {
+export function LeadsPage({ canManage }: { canManage: boolean }) {
   const [catalog, setCatalog] = useState<Catalog>();
   const [qualifyingLeadId, setQualifyingLeadId] = useState<string>();
   const [selectedLeadId, setSelectedLeadId] = useState<string>();
   const [lastOutcome, setLastOutcome] = useState<Lead>();
+  const [sellers, setSellers] = useState<Array<{ id: string; name: string }>>([]);
   const [leads, setLeads] = useState<Lead[]>([]);
   const [productId, setProductId] = useState('');
   const [search, setSearch] = useState('');
@@ -168,6 +174,12 @@ export function LeadsPage() {
       .catch(() => setError('Não foi possível carregar produtos.'));
   }, []);
   useEffect(() => {
+    if (!canManage) return;
+    apiRequest<{ users: Array<{ id: string; name: string; active: boolean }> }>('/api/users')
+      .then((result) => setSellers(result.users.filter((user) => user.active)))
+      .catch(() => undefined);
+  }, [canManage]);
+  useEffect(() => {
     load();
   }, [productId, search]);
   const grouped = useMemo(
@@ -192,11 +204,14 @@ export function LeadsPage() {
   };
   const setOutcome = async (status: 'WON' | 'LOST') => {
     if (!selectedLead) return;
+    const lossReason =
+      status === 'LOST' ? window.prompt('Qual foi o motivo da perda?')?.trim() : undefined;
+    if (status === 'LOST' && !lossReason) return;
     setError(undefined);
     try {
       const result = await apiRequest<{ lead: Lead }>(`/api/leads/${selectedLead.id}/outcome`, {
         method: 'PATCH',
-        body: JSON.stringify({ status })
+        body: JSON.stringify({ status, lossReason })
       });
       setLeads((items) => items.filter((lead) => lead.id !== result.lead.id));
       setSelectedLeadId(undefined);
@@ -225,6 +240,14 @@ export function LeadsPage() {
       );
     }
   };
+  const assignOwner = async (ownerId: string) => {
+    if (!selectedLead) return;
+    const result = await apiRequest<{ lead: Lead }>(`/api/leads/${selectedLead.id}/owner`, {
+      method: 'PATCH',
+      body: JSON.stringify({ ownerId: ownerId || null })
+    });
+    setLeads((items) => items.map((lead) => (lead.id === result.lead.id ? result.lead : lead)));
+  };
   const submit = async (data: FormValues) => {
     setError(undefined);
     try {
@@ -232,6 +255,15 @@ export function LeadsPage() {
         method: 'POST',
         body: JSON.stringify({
           ...data,
+          estimatedValueCents: data.estimatedValueCents
+            ? Math.round(Number(data.estimatedValueCents) * 100)
+            : undefined,
+          expectedCloseAt: data.expectedCloseAt
+            ? new Date(`${data.expectedCloseAt}T12:00:00`).toISOString()
+            : undefined,
+          consentCapturedAt: data.consentCapturedAt
+            ? new Date(`${data.consentCapturedAt}T12:00:00`).toISOString()
+            : undefined,
           productId: productId || data.productId,
           pipelineId: selectedProduct?.pipeline?.id || data.pipelineId,
           stageId: data.stageId || stages[0]?.id,
@@ -318,6 +350,20 @@ export function LeadsPage() {
               Lead selecionado
             </p>
             <p className="font-semibold">{selectedLead.establishmentName}</p>
+            {canManage && (
+              <select
+                className="field mt-2 text-sm"
+                defaultValue=""
+                onChange={(event) => void assignOwner(event.target.value)}
+              >
+                <option value="">Atribuir a…</option>
+                {sellers.map((seller) => (
+                  <option key={seller.id} value={seller.id}>
+                    {seller.name}
+                  </option>
+                ))}
+              </select>
+            )}
           </div>
           <div className="lead-outcome-actions">
             <button
@@ -411,6 +457,41 @@ export function LeadsPage() {
               <label className="label md:col-span-2">
                 Próxima ação
                 <input className="field" {...register('nextAction')} />
+              </label>
+              <label className="label">
+                Valor estimado (R$)
+                <input
+                  className="field"
+                  min="0"
+                  step="0.01"
+                  type="number"
+                  {...register('estimatedValueCents')}
+                />
+              </label>
+              <label className="label">
+                Fechamento previsto
+                <input className="field" type="date" {...register('expectedCloseAt')} />
+              </label>
+              <label className="label">
+                Consentimento registrado em
+                <input className="field" type="date" {...register('consentCapturedAt')} />
+              </label>
+              <label className="label">
+                Base legal
+                <select className="field" {...register('legalBasis')}>
+                  <option value="">Não informada</option>
+                  <option value="Consentimento">Consentimento</option>
+                  <option value="Legítimo interesse">Legítimo interesse</option>
+                  <option value="Execução de contrato">Execução de contrato</option>
+                </select>
+              </label>
+              <label className="label md:col-span-2">
+                Fonte do consentimento
+                <input
+                  className="field"
+                  placeholder="Ex.: formulário do site"
+                  {...register('consentSource')}
+                />
               </label>
               <div className="col-span-2 flex justify-end gap-2">
                 <button className="secondary-button" onClick={() => setOpen(false)} type="button">

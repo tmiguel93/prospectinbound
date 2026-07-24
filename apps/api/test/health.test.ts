@@ -195,7 +195,7 @@ describe('lead outcomes', () => {
     await prisma.$disconnect();
   });
 
-  it('marks a lead as won or lost without changing its Kanban stage', async () => {
+  it('records a loss reason, owner assignment and privacy actions without changing Kanban stage', async () => {
     const stamp = Date.now();
     const partner = await prisma.partner.create({ data: { name: `Parceiro resultado ${stamp}` } });
     const pipeline = await prisma.pipeline.create({
@@ -244,6 +244,34 @@ describe('lead outcomes', () => {
       (await agent.patch(`/api/leads/${created.body.lead.id}/outcome`).send({ status: 'INVALID' }))
         .status
     ).toBe(400);
+    expect(
+      (await agent.patch(`/api/leads/${created.body.lead.id}/outcome`).send({ status: 'LOST' }))
+        .status
+    ).toBe(400);
+    const lost = await agent
+      .patch(`/api/leads/${created.body.lead.id}/outcome`)
+      .send({ status: 'LOST', lossReason: 'Orçamento fora do previsto' });
+    expect(lost.status).toBe(200);
+    expect(lost.body.lead.lossReason).toBe('Orçamento fora do previsto');
+    expect(lost.body.lead.outcomeAt).toBeTruthy();
+
+    const seller = await agent.post('/api/users').send({
+      name: 'Vendedor de resultado',
+      email: `resultado-vendedor-${stamp}@example.com`,
+      password: 'senha-segura-123',
+      role: 'SELLER',
+      monthlyGoalCents: 120000
+    });
+    expect(seller.body.user.monthlyGoalCents).toBe(120000);
+    const assigned = await agent
+      .patch(`/api/leads/${created.body.lead.id}/owner`)
+      .send({ ownerId: seller.body.user.id });
+    expect(assigned.status).toBe(200);
+    expect(assigned.body.lead.ownerId).toBe(seller.body.user.id);
+    expect((await agent.get(`/api/leads/${created.body.lead.id}/privacy-export`)).status).toBe(200);
+    const anonymized = await agent.post(`/api/leads/${created.body.lead.id}/anonymize`);
+    expect(anonymized.status).toBe(200);
+    expect(anonymized.body.lead.anonymizedAt).toBeTruthy();
   });
 });
 

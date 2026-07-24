@@ -1,7 +1,14 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { apiRequest } from '../../lib/api.js';
 
-type User = { id: string; name: string; email: string; role: string; active: boolean };
+type User = {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  active: boolean;
+  monthlyGoalCents: number;
+};
 type Log = {
   id: string;
   action: string;
@@ -14,7 +21,13 @@ export function UsersPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
-  const [form, setForm] = useState({ name: '', email: '', password: '', role: 'SELLER' });
+  const [form, setForm] = useState({
+    name: '',
+    email: '',
+    password: '',
+    role: 'SELLER',
+    monthlyGoalCents: 0
+  });
   const load = () =>
     apiRequest<{ users: User[] }>('/api/users')
       .then((result) => setUsers(result.users))
@@ -27,7 +40,7 @@ export function UsersPage() {
     try {
       setError('');
       await apiRequest('/api/users', { method: 'POST', body: JSON.stringify(form) });
-      setForm({ name: '', email: '', password: '', role: 'SELLER' });
+      setForm({ name: '', email: '', password: '', role: 'SELLER', monthlyGoalCents: 0 });
       setNotice('Usuário criado com sucesso.');
       await load();
     } catch (cause) {
@@ -49,7 +62,7 @@ export function UsersPage() {
       <p className="eyebrow text-cyan-700">Administração</p>
       <h1 className="text-2xl font-bold">Usuários e permissões</h1>
       <form
-        className="mt-6 grid gap-3 rounded-xl border bg-white p-4 md:grid-cols-4"
+        className="mt-6 grid gap-3 rounded-xl border bg-white p-4 md:grid-cols-5"
         onSubmit={(event) => void create(event)}
       >
         <input
@@ -76,6 +89,20 @@ export function UsersPage() {
           value={form.password}
           onChange={(event) => setForm({ ...form, password: event.target.value })}
         />
+        <input
+          className="field m-0"
+          min={0}
+          placeholder="Meta mensal (R$)"
+          step="0.01"
+          type="number"
+          value={form.monthlyGoalCents ? form.monthlyGoalCents / 100 : ''}
+          onChange={(event) =>
+            setForm({
+              ...form,
+              monthlyGoalCents: Math.round(Number(event.target.value || 0) * 100)
+            })
+          }
+        />
         <div className="flex gap-2">
           <select
             className="field m-0"
@@ -98,6 +125,7 @@ export function UsersPage() {
             <tr>
               <th className="px-4 py-3">Usuário</th>
               <th className="px-4 py-3">Papel</th>
+              <th className="px-4 py-3">Meta mensal</th>
               <th className="px-4 py-3">Status</th>
               <th className="px-4 py-3">Ações</th>
             </tr>
@@ -109,6 +137,21 @@ export function UsersPage() {
                   <b>{user.name}</b>
                   <br />
                   <span className="text-slate-500">{user.email}</span>
+                </td>
+                <td className="px-4 py-3">
+                  <input
+                    aria-label={`Meta mensal de ${user.name}`}
+                    className="field m-0 w-32"
+                    defaultValue={user.monthlyGoalCents ? user.monthlyGoalCents / 100 : ''}
+                    min={0}
+                    step="0.01"
+                    type="number"
+                    onBlur={(event) => {
+                      const monthlyGoalCents = Math.round(Number(event.target.value || 0) * 100);
+                      if (monthlyGoalCents !== user.monthlyGoalCents)
+                        void update(user, { monthlyGoalCents });
+                    }}
+                  />
                 </td>
                 <td className="px-4 py-3">
                   <select
@@ -136,7 +179,7 @@ export function UsersPage() {
             ))}
             {!users.length && (
               <tr>
-                <td className="px-4 py-8 text-slate-500" colSpan={4}>
+                <td className="px-4 py-8 text-slate-500" colSpan={5}>
                   Nenhum usuário encontrado.
                 </td>
               </tr>

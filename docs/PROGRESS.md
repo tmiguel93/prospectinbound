@@ -2,7 +2,7 @@
 
 ## Módulo atual
 
-Módulo 41 — Sessões, limites e backups robustos (concluído).
+Módulo 46 — Funil comercial, distribuição, privacidade e operação de mensagens (concluído).
 
 ## Módulos concluídos
 
@@ -48,17 +48,22 @@ Módulo 41 — Sessões, limites e backups robustos (concluído).
 - Módulo 39 — Exportação CSV segura contra fórmulas e trilha de auditoria de exportações.
 - Módulo 40 — Exposição de rede restrita a localhost nos Compose e orientação explícita de TLS para acesso externo.
 - Módulo 41 — Revogação de sessões, webhook WhatsApp em modo fail-closed, limites de requisição e backups PostgreSQL com pg_dump/pg_restore.
+- Módulo 42 — Dados comerciais do funil: valor estimado, previsão de fechamento, motivo de perda e metas mensais por vendedor.
+- Módulo 43 — Distribuição administrativa de leads entre responsáveis, com trilha de auditoria e seleção direta no Kanban.
+- Módulo 44 — Privacidade LGPD operacional: registro de consentimento, exportação por titular e anonimização auditada.
+- Módulo 45 — Modelos reutilizáveis de mensagens, status da integração oficial do WhatsApp e idempotência no recebimento de webhook.
+- Módulo 46 — Expansão da regressão de API para resultado de lead, distribuição e privacidade.
 
 ## Último commit
 
-`security: harden access, sessions and operations`.
+Pendente do commit deste ciclo.
 
 ## Testes executados
 
 - `npx prettier --check` nos arquivos do módulo
 - `npx eslint apps packages scripts --max-warnings=0`
 - `npm run typecheck`
-- `npm run test` — 11 testes aprovados.
+- `npm run test` — 11 testes de API aprovados antes da expansão final desta etapa.
 - `npm run build`
 
 ## Pendências conhecidas
@@ -67,7 +72,7 @@ As lacunas pós-MVP foram convertidas em módulos sequenciais e serão tratadas 
 
 ## Próximo módulo
 
-Próxima evolução: migrações PostgreSQL versionadas e teste E2E visual.
+Próxima evolução sugerida: baseline de migrações PostgreSQL versionadas e teste E2E visual em navegador real.
 
 ## Decisões técnicas relevantes
 

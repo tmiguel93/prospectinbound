@@ -15,11 +15,20 @@ export const leadSchema = z.object({
   priority: z.enum(['Baixa', 'Normal', 'Alta']).default('Normal'),
   nextAction: z.string().trim().max(500).optional(),
   nextActionAt: z.string().datetime().optional(),
+  estimatedValueCents: z.number().int().positive().optional(),
+  expectedCloseAt: z.string().datetime().optional(),
+  consentCapturedAt: z.string().datetime().optional(),
+  consentSource: z.string().trim().max(160).optional(),
+  legalBasis: z.string().trim().max(160).optional(),
   notes: z.string().trim().max(3000).optional(),
   allowDuplicate: z.boolean().default(false)
 });
 export const moveSchema = z.object({ stageId: z.string().cuid() });
-export const outcomeSchema = z.object({ status: z.enum(['ACTIVE', 'WON', 'LOST']) });
+export const outcomeSchema = z.object({
+  status: z.enum(['ACTIVE', 'WON', 'LOST']),
+  lossReason: z.string().trim().min(2).max(500).optional()
+});
+export const assignmentSchema = z.object({ ownerId: z.string().cuid().nullable() });
 export const activitySchema = z.object({
   type: z.enum([
     'Ligação',

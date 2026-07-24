@@ -20,6 +20,7 @@ type Message = {
   createdAt: string;
   sender: { id: string; name: string } | null;
 };
+type MessageTemplate = { id: string; name: string; content: string; active: boolean };
 
 export function ConversationsPage() {
   const [leads, setLeads] = useState<Lead[]>([]);
@@ -29,6 +30,7 @@ export function ConversationsPage() {
   const [content, setContent] = useState('');
   const [channel, setChannel] = useState<'INTERNAL' | 'WHATSAPP'>('INTERNAL');
   const [whatsappReady, setWhatsappReady] = useState(false);
+  const [templates, setTemplates] = useState<MessageTemplate[]>([]);
   const [error, setError] = useState<string>();
   const [sending, setSending] = useState(false);
 
@@ -52,6 +54,11 @@ export function ConversationsPage() {
     void apiRequest<{ outboundReady: boolean }>('/api/whatsapp/status')
       .then((status) => setWhatsappReady(status.outboundReady))
       .catch(() => setWhatsappReady(false));
+  }, []);
+  useEffect(() => {
+    void apiRequest<{ templates: MessageTemplate[] }>('/api/communications/templates')
+      .then((data) => setTemplates(data.templates.filter((template) => template.active)))
+      .catch(() => setTemplates([]));
   }, []);
   useEffect(() => {
     if (!selectedId) return setMessages([]);
@@ -175,6 +182,25 @@ export function ConversationsPage() {
                     WhatsApp oficial
                   </button>
                 </div>
+                {!!templates.length && (
+                  <select
+                    aria-label="Aplicar modelo de mensagem"
+                    className="field m-0"
+                    defaultValue=""
+                    onChange={(event) => {
+                      const template = templates.find((item) => item.id === event.target.value);
+                      if (template) setContent(template.content);
+                      event.currentTarget.value = '';
+                    }}
+                  >
+                    <option value="">Aplicar modelo de mensagem…</option>
+                    {templates.map((template) => (
+                      <option key={template.id} value={template.id}>
+                        {template.name}
+                      </option>
+                    ))}
+                  </select>
+                )}
                 <textarea
                   value={content}
                   onChange={(event) => setContent(event.target.value)}

@@ -2,11 +2,30 @@ import { Router } from 'express';
 import { prisma } from '../../lib/prisma.js';
 import { leadScope } from '../auth/auth.access.js';
 import { audit } from '../audit/audit.service.js';
-import { requireAuth } from '../auth/auth.middleware.js';
+import { requireAdmin, requireAuth } from '../auth/auth.middleware.js';
+import { z } from 'zod';
 import { internalMessageSchema } from './communications.schemas.js';
 
 export const communicationsRouter = Router();
 communicationsRouter.use(requireAuth);
+
+const templateSchema = z.object({
+  name: z.string().trim().min(2).max(80),
+  content: z.string().trim().min(1).max(4096),
+  active: z.boolean().default(true)
+});
+
+communicationsRouter.get('/templates', async (_request, response) => {
+  response.json({ templates: await prisma.messageTemplate.findMany({ orderBy: { name: 'asc' } }) });
+});
+
+communicationsRouter.post('/templates', requireAdmin, async (request, response) => {
+  const template = await prisma.messageTemplate.create({
+    data: templateSchema.parse(request.body)
+  });
+  await audit(response, 'CREATE', 'MessageTemplate', template.id, { name: template.name });
+  response.status(201).json({ template });
+});
 
 communicationsRouter.get('/leads', async (request, response) => {
   const search = typeof request.query.search === 'string' ? request.query.search.trim() : '';

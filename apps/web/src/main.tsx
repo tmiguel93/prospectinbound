@@ -27,7 +27,7 @@ function AuthenticatedApp({ user, onLogout }: { user: User; onLogout: () => void
         <Routes>
           <Route path="/" element={<DashboardPage />} />
           <Route path="/parceiros-e-produtos" element={<ProductCatalogPage />} />
-          <Route path="/leads" element={<LeadsPage />} />
+          <Route path="/leads" element={<LeadsPage canManage={user.role === 'ADMIN'} />} />
           <Route path="/conversas" element={<ConversationsPage />} />
           <Route path="/agenda" element={<AgendaPage />} />
           <Route path="/usuarios" element={<UsersPage />} />
@@ -39,7 +39,10 @@ function AuthenticatedApp({ user, onLogout }: { user: User; onLogout: () => void
             path="/comissoes"
             element={<CommissionsPage canManage={user.role === 'ADMIN'} />}
           />
-          <Route path="/configuracoes" element={<SettingsPage />} />
+          <Route
+            path="/configuracoes"
+            element={<SettingsPage canManage={user.role === 'ADMIN'} />}
+          />
           <Route path="/auditoria" element={<AuditPage />} />
           {placeholders.map((title) => (
             <Route

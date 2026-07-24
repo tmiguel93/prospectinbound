@@ -9,13 +9,15 @@ const createSchema = z.object({
   name: z.string().trim().min(2).max(120),
   email: z.string().trim().email(),
   password: z.string().min(8),
-  role: z.enum(['ADMIN', 'SELLER']).default('SELLER')
+  role: z.enum(['ADMIN', 'SELLER']).default('SELLER'),
+  monthlyGoalCents: z.number().int().min(0).default(0)
 });
 const updateSchema = z.object({
   name: z.string().trim().min(2).max(120).optional(),
   role: z.enum(['ADMIN', 'SELLER']).optional(),
   active: z.boolean().optional(),
-  password: z.string().min(8).optional()
+  password: z.string().min(8).optional(),
+  monthlyGoalCents: z.number().int().min(0).optional()
 });
 const publicSelect = {
   id: true,
@@ -23,6 +25,7 @@ const publicSelect = {
   email: true,
   role: true,
   active: true,
+  monthlyGoalCents: true,
   createdAt: true
 };
 
@@ -56,7 +59,8 @@ usersRouter.post('/', async (request, response) => {
       name: input.name,
       email: input.email,
       passwordHash: await bcrypt.hash(input.password, 12),
-      role: input.role
+      role: input.role,
+      monthlyGoalCents: input.monthlyGoalCents
     },
     select: publicSelect
   });

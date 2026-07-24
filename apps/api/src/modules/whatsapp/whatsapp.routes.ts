@@ -62,20 +62,34 @@ whatsappRouter.post('/webhook', async (request, response) => {
               where: { OR: [{ whatsapp: contact }, { phone: contact }] }
             })
           : null;
-        await prisma.communicationMessage.upsert({
-          where: { externalId: String(incoming.id) },
-          update: {},
-          create: {
-            leadId: lead?.id,
-            channel: 'WHATSAPP',
-            direction: 'INBOUND',
-            contact: contact || null,
-            content,
-            status: 'RECEIVED',
-            externalId: String(incoming.id),
-            metadata: JSON.stringify({ type: incoming.type, timestamp: incoming.timestamp })
-          }
+        const externalId = String(incoming.id);
+        const alreadyReceived = await prisma.communicationMessage.findUnique({
+          where: { externalId },
+          select: { id: true }
         });
+        if (!alreadyReceived) {
+          await prisma.communicationMessage.create({
+            data: {
+              leadId: lead?.id,
+              channel: 'WHATSAPP',
+              direction: 'INBOUND',
+              contact: contact || null,
+              content,
+              status: 'RECEIVED',
+              externalId,
+              metadata: JSON.stringify({ type: incoming.type, timestamp: incoming.timestamp })
+            }
+          });
+        }
+        if (lead && !alreadyReceived) {
+          await prisma.leadActivity.create({
+            data: {
+              leadId: lead.id,
+              type: 'WhatsApp',
+              content: 'Nova mensagem recebida via WhatsApp.'
+            }
+          });
+        }
       }
       for (const status of Array.isArray(value?.statuses) ? value.statuses : []) {
         if (status?.id) {
