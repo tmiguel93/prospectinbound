@@ -14,6 +14,13 @@ import { SettingsPage } from './features/settings/SettingsPage.js';
 import { SubscriptionsPage } from './features/operations/OperationsPages.js';
 import { ReportsPage } from './features/reports/ReportsPage.js';
 import { ConversationsPage } from './features/communications/ConversationsPage.js';
+import {
+  ContractsPage,
+  OperationsAgendaPage,
+  OperationsDashboardPage,
+  OperationsKanbanPage,
+  ServiceCatalogPage
+} from './features/operations/OutsourcingPages.js';
 import { apiRequest, type User } from './lib/api.js';
 import { ComingSoonPage } from './pages/ComingSoonPage.js';
 import './styles.css';
@@ -30,6 +37,17 @@ function AuthenticatedApp({ user, onLogout }: { user: User; onLogout: () => void
           <Route path="/leads" element={<LeadsPage canManage={user.role === 'ADMIN'} />} />
           <Route path="/conversas" element={<ConversationsPage />} />
           <Route path="/agenda" element={<AgendaPage />} />
+          <Route path="/operacoes" element={<OperationsDashboardPage />} />
+          <Route
+            path="/servicos"
+            element={<ServiceCatalogPage canManage={user.role === 'ADMIN'} />}
+          />
+          <Route path="/contratos" element={<ContractsPage canManage={user.role === 'ADMIN'} />} />
+          <Route
+            path="/execucao"
+            element={<OperationsKanbanPage canManage={user.role === 'ADMIN'} />}
+          />
+          <Route path="/agenda-operacional" element={<OperationsAgendaPage />} />
           <Route path="/usuarios" element={<UsersPage />} />
           <Route path="/vendas" element={<SalesPage canManage={user.role === 'ADMIN'} />} />
           <Route path="/pipelines" element={<Navigate to="/leads" replace />} />

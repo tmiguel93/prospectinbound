@@ -5,6 +5,8 @@ coverage/
 *.log
 data/*.db
 data/*.db-*
+data/service-photos/*
+!data/service-photos/.gitkeep
 backups/*
 !backups/.gitkeep
 apps/api/postgres/schema.prisma

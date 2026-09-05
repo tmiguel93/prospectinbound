@@ -383,3 +383,59 @@ describe('local backups', () => {
     ).toBe(400);
   });
 });
+
+describe('outsourcing operations', () => {
+  beforeEach(async () => {
+    await prisma.user.deleteMany();
+  });
+
+  afterAll(async () => {
+    await prisma.$disconnect();
+  });
+
+  it('manages services, contracts and a service order through the operational Kanban', async () => {
+    const stamp = Date.now();
+    const agent = request.agent(app);
+    await agent.post('/api/auth/setup').send({
+      name: 'Administradora operacional',
+      email: `operacoes-${stamp}@example.com`,
+      password: 'senha-segura-123'
+    });
+    const service = await agent.post('/api/operations/services').send({
+      name: `Limpeza fina ${stamp}`,
+      unit: 'm²',
+      defaultPriceCents: 1250
+    });
+    expect(service.status).toBe(201);
+    const client = await agent.post('/api/operations/clients').send({
+      name: `Condomínio operacional ${stamp}`,
+      taxId: `12.345.${stamp}`
+    });
+    expect(client.status).toBe(201);
+    const contract = await agent.post('/api/operations/contracts').send({
+      clientId: client.body.client.id,
+      number: `CTR-${stamp}`,
+      title: 'Prestação de limpeza',
+      startsAt: new Date().toISOString(),
+      valueCents: 320000
+    });
+    expect(contract.status).toBe(201);
+    const job = await agent.post('/api/operations/jobs').send({
+      contractId: contract.body.contract.id,
+      serviceId: service.body.service.id,
+      title: 'Limpeza do hall principal',
+      stage: 'SCHEDULED'
+    });
+    expect(job.status).toBe(201);
+    const moved = await agent
+      .patch(`/api/operations/jobs/${job.body.job.id}/move`)
+      .send({ stage: 'COMPLETED' });
+    expect(moved.status).toBe(200);
+    expect(moved.body.job.stage).toBe('COMPLETED');
+    expect(moved.body.job.completedAt).toBeTruthy();
+    expect((await agent.get('/api/operations/dashboard')).body).toMatchObject({
+      activeContracts: 1,
+      completed: 1
+    });
+  });
+});

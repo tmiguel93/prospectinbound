@@ -20,6 +20,7 @@ import { importsRouter } from './modules/imports/imports.routes.js';
 import { commissionsRouter } from './modules/commissions/commissions.routes.js';
 import { whatsappRouter } from './modules/whatsapp/whatsapp.routes.js';
 import { communicationsRouter } from './modules/communications/communications.routes.js';
+import { operationsRouter } from './modules/operations/operations.routes.js';
 import { errorHandler } from './shared/error-handler.js';
 
 export const app = express();
@@ -35,7 +36,7 @@ app.use(
 );
 app.use(
   express.json({
-    limit: '1mb',
+    limit: '6mb',
     verify: (request, _response, buffer) => {
       (request as typeof request & { rawBody?: Buffer }).rawBody = buffer;
     }
@@ -75,4 +76,5 @@ app.use('/api/imports', importsRouter);
 app.use('/api/commissions', commissionsRouter);
 app.use('/api/whatsapp', whatsappRouter);
 app.use('/api/communications', communicationsRouter);
+app.use('/api/operations', operationsRouter);
 app.use(errorHandler);

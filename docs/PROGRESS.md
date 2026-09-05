@@ -2,7 +2,7 @@
 
 ## Módulo atual
 
-Módulo 46 — Funil comercial, distribuição, privacidade e operação de mensagens (concluído).
+Módulo 47 — Operações terceirizadas: contratos, serviços, execução e evidências (concluído).
 
 ## Módulos concluídos
 
@@ -53,17 +53,18 @@ Módulo 46 — Funil comercial, distribuição, privacidade e operação de mens
 - Módulo 44 — Privacidade LGPD operacional: registro de consentimento, exportação por titular e anonimização auditada.
 - Módulo 45 — Modelos reutilizáveis de mensagens, status da integração oficial do WhatsApp e idempotência no recebimento de webhook.
 - Módulo 46 — Expansão da regressão de API para resultado de lead, distribuição e privacidade.
+- Módulo 47 — Operação terceirizada com catálogo de serviços e clientes, contratos ativos, agenda, Kanban de execução, fotos de evidência e auditoria.
 
 ## Último commit
 
-Pendente do commit deste ciclo.
+`feat: add outsourcing operations module`.
 
 ## Testes executados
 
 - `npx prettier --check` nos arquivos do módulo
 - `npx eslint apps packages scripts --max-warnings=0`
 - `npm run typecheck`
-- `npm run test` — 11 testes de API aprovados antes da expansão final desta etapa.
+- `npm run test` — 12 testes de API aprovados, incluindo o fluxo de contratos e execução terceirizada.
 - `npm run build`
 
 ## Pendências conhecidas

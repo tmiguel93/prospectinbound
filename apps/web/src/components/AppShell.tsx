@@ -4,6 +4,7 @@ import {
   ChartNoAxesCombined,
   ClipboardList,
   ContactRound,
+  HardHat,
   LayoutDashboard,
   LogOut,
   Menu,
@@ -47,6 +48,16 @@ const navigation = [
       { to: '/auditoria', label: 'Auditoria', icon: ClipboardList },
       { to: '/relatorios', label: 'Relatórios', icon: ChartNoAxesCombined },
       { to: '/configuracoes', label: 'Configurações', icon: Settings }
+    ]
+  },
+  {
+    group: 'Operação terceirizada',
+    items: [
+      { to: '/operacoes', label: 'Dashboard operacional', icon: HardHat },
+      { to: '/agenda-operacional', label: 'Agenda operacional', icon: CalendarDays },
+      { to: '/execucao', label: 'Execução e Kanban', icon: ClipboardList },
+      { to: '/contratos', label: 'Contratos ativos', icon: Package },
+      { to: '/servicos', label: 'Serviços e clientes', icon: UsersRound }
     ]
   }
 ];
